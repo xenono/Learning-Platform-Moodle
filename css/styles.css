@@ -31,6 +31,27 @@ a.current {
    color: pink;
     font-weight: bold;
 }
+.wrapper-center {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Forms */
+.flex-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+label {
+    font-size: 1.75rem;
+    margin-bottom: 5px;
+}
+input {
+    margin-bottom: 10px;
+}
 /* End of globals styles*/
 /* Components styles*/
 /* Header styles */
