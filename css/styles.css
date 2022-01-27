@@ -145,3 +145,134 @@ footer div p {
     grid-column-start: 2;
     grid-column-end: -1;
 }
+
+
+
+
+
+
+/*core 1 assignments view */
+.core1-modules-list {
+    grid-column-start: 1;
+}
+
+.core1-module-item {
+    list-style: none;
+}
+
+.core1-assignment-titles {
+    grid-column-start: 2;
+    text-align: center;
+}
+
+.core1-assignment-titles-item {
+    list-style: none;
+}
+
+.core1-assignment-dates {
+    grid-column-start: 3;
+}
+
+.core1-assignment-dates-item {
+    list-style: none;
+}
+
+.core1-assignments {
+    display: grid;
+    grid-template-columns: 3;
+    grid-column-gap: 2%;
+    background-color: grey;
+}
+
+
+/*core 2 assignments view*/
+.core2-modules-list {
+    grid-column-start: 1;
+}
+
+.core2-module-item {
+    list-style: none;
+}
+
+.core2-assignment-titles {
+    grid-column-start: 2;
+    text-align: center;
+}
+
+.core2-assignment-titles-item {
+    list-style: none;
+}
+
+.core2-assignment-dates {
+    grid-column-start: 3;
+}
+
+.core2-assignment-dates-item {
+    list-style: none;
+}
+
+.core2-assignments {
+    display: grid;
+    grid-template-columns: 3;
+    grid-column-gap: 2%;
+    background-color: grey;
+}
+
+.assignments-grid {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1;
+    grid-template-rows: 2;
+}
+
+.quizzes-elements-grid {
+    text-align: center;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1;
+    grid-template-rows: 2;
+}
+
+.quizzes-grid {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column-gap: 2%;
+    grid-template-rows: 1;
+}
+
+.core2-quizzes {
+    display: grid;
+    grid-template-columns: 2;
+    grid-column-gap: 2%;
+    grid-column-start: 2;
+    background-color: grey;
+}
+
+.core1-quizzes {
+    display: grid;
+    grid-template-columns: 2;
+    grid-column-gap: 2%;
+    grid-column-start: 1;
+    background-color: grey;
+}
+
+.core1-quizzes-list {
+    margin: auto;
+}
+
+.core1-quizzes-item {
+    font-size: 1.5rem;
+}
+
+.core2-quizzes-list {
+    margin: auto;
+}
+
+.core2-quizzes-item {
+    font-size: 1.5rem;
+}
