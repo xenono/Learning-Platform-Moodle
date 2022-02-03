@@ -2,7 +2,7 @@
 html,body {
 
     font-family: "Roboto", sans-serif;
-    /*font-size: 62.5%;*/
+    font-size: 62.5%;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -18,17 +18,13 @@ p {
 }
 a {
     text-decoration: none;
-    color: #000;
     cursor: pointer;
-}
-a:hover {
-    text-decoration: underline;
 }
 a:visited {
     color: black;
 }
 a.current {
-   color: pink;
+   color: var(--orange);
     font-weight: bold;
 }
 .wrapper-center {
@@ -39,21 +35,54 @@ a.current {
     justify-content: center;
     align-items: center;
 }
+/* Global Color Variables */
+:root {
+    --orange: #F98012;
+    --baige: #FFE9D0;
+}
+/* End OF Global Color Variables */
 /* Forms */
 .flex-form {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    align-items: center;
+    width: 15%;
 }
 label {
     font-size: 1.75rem;
     margin-bottom: 5px;
+    text-align: center;
 }
 input {
-    margin-bottom: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    padding: 5px 10px;
 }
+
+button {
+    padding: 10px 20px;
+    width: 75px;
+}
+
 /* End of globals styles*/
+
+/* Common css styles */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+/* End of common css styles*/
+
 /* Components styles*/
+
 /* Header styles */
 header {
     font-size: 1.75rem;
@@ -71,12 +100,15 @@ header {
     padding: 0;
 }
 .nav-item{
-    color: black;
     text-decoration: none;
     cursor: pointer;
 }
 .nav-item:hover{
-    text-decoration: underline;
+    font-weight: bold;
+}
+a.nav-item-active, .nav-item-active {
+    color: var(--orange);
+    font-weight: bold;
 }
 .nav-item-dropdown {
     position: relative;
@@ -145,12 +177,9 @@ footer div p {
     grid-column-start: 2;
     grid-column-end: -1;
 }
+/* Login Form Styles */
 
-
-
-
-
-
+/* End of Login Form Styles */
 /*core 1 assignments view */
 .core1-modules-list {
     grid-column-start: 1;
