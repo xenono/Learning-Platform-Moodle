@@ -208,7 +208,7 @@ footer div p {
 
 .core1-assignments {
     display: grid;
-    grid-template-columns: 3;
+    /*grid-template-columns: 3;*/
     grid-column-gap: 2%;
     background-color: grey;
 }
@@ -242,7 +242,7 @@ footer div p {
 
 .core2-assignments {
     display: grid;
-    grid-template-columns: 3;
+    /*grid-template-columns: 3;*/
     grid-column-gap: 2%;
     background-color: grey;
 }
@@ -252,16 +252,16 @@ footer div p {
     width: 50%;
     margin: auto;
     display: grid;
-    grid-template-columns: 1;
-    grid-template-rows: 2;
+    /*grid-template-columns: 1;*/
+    /*grid-template-rows: 2;*/
 }
 
 .quizzes-elements-grid {
     text-align: center;
     margin: auto;
     display: grid;
-    grid-template-columns: 1;
-    grid-template-rows: 2;
+    /*grid-template-columns: 1;*/
+    /*grid-template-rows: 2;*/
 }
 
 .quizzes-grid {
@@ -271,12 +271,12 @@ footer div p {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-column-gap: 2%;
-    grid-template-rows: 1;
+    /*grid-template-rows: 1;*/
 }
 
 .core2-quizzes {
     display: grid;
-    grid-template-columns: 2;
+    /*grid-template-columns: 2;*/
     grid-column-gap: 2%;
     grid-column-start: 2;
     background-color: grey;
@@ -284,7 +284,7 @@ footer div p {
 
 .core1-quizzes {
     display: grid;
-    grid-template-columns: 2;
+    /*grid-template-columns: 2;*/
     grid-column-gap: 2%;
     grid-column-start: 1;
     background-color: grey;
@@ -305,3 +305,112 @@ footer div p {
 .core2-quizzes-item {
     font-size: 1.5rem;
 }
+
+/* Dashboard*/
+/* tooltip class in dashboard.php*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltiptext a{
+    color: white;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 7px;
+    /* Position the tooltip text  */
+    position:absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
+
+.container {
+    width: 1200px;
+    margin: 50px auto;
+    background: whitesmoke;
+    height: 900px;
+
+}
+.navigation-bar {
+    background-color:#f1f1f1;
+    width: 200px;
+    height: inherit;
+    float: left;
+}
+.navigation-content {
+    text-align:center;
+    padding: 10px;
+
+}
+
+.navigation-box{
+    float: left;
+    text-align: center;
+    padding: 10px;
+    font-family:sans-serif;
+    padding-left: 30px;
+}
+.navigation-box .box {
+    position: relative;
+    width: calc(250px - 30px);
+    height: calc(250px - 30px);
+    background: palegreen;
+    float:left;
+    margin: 30px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.navigation-box .box .icon{
+    position: absolute;
+    top: 0;
+    left:0;
+    width:100%;
+    height :100%;
+    background: seagreen;
+    transition :0.5s;
+    z-index:1;
+}
+.navigation-box .box:hover .icon{
+    top:20px;
+    right:calc(50% - 40px);
+    left :calc(50% - 40px);
+    width:80px;
+    height:80px;
+    border-radius: 50%;
+}
+.navigation-box .box .icon .fa{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    font-size:80px;
+    transition: 0.5s;
+    color:black;
+}
+.navigation-box .box:hover .icon .fa{
+    font-size: 50px;
+}
+.navigation-box .box .content{
+
+    font-size: 25px;
+    position :absolute;
+    top:100px;
+    height:calc(100% - 100px);
+    text-align: center;
+    padding:20px;
+    box-sizing: border-box;
+}
+/* The navigation menu links */
+
