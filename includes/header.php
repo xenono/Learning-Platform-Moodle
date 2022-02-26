@@ -16,7 +16,7 @@ $currentPage =  end($currentPage);
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
     <!-- End of fonts imports -->
     <!-- Import CSS -->
-    <link href="../css/styles.css" type="text/css" rel="stylesheet" />
+    <link href="../public/css/styles.css" type="text/css" rel="stylesheet" />
     <!-- End of CSS imports -->
 </head>
 <body>
