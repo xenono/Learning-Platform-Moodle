@@ -1,5 +1,5 @@
 <?php
-include "../components/header.php";
+include ("../includes/header.php");
 $currentCourse = null;
 $currentWeek = "1";
 if(isset($_GET["course"]) && isset($_GET["week"])){
@@ -40,6 +40,6 @@ if(isset($_GET["course"]) && isset($_GET["week"])){
     </div>
 </div>
 <?php
-include "../components/footer.php";
+include ("../includes/footer.php");
 ?>
 

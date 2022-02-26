@@ -1,8 +1,8 @@
 <?php
-include "../components/header.php";
+include ("../includes/header.php");
 ?>
 <h1>Grades</h1>
 <?php
-include "../components/footer.php";
+include "../includes/footer.php";
 ?>
 

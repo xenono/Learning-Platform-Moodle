@@ -1,6 +1,7 @@
 <?php
-include "../components/header.php";
+include("../includes/header.php");
 // include "../session/auth.php"
+include("../config/Connection.php");
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +13,7 @@ include "../components/header.php";
 <div class="container">
     <div class="navigation-bar">
         <div class="navigation-content">
-            <img src="../assets/navigation_logo.jpg" style="float:left;width:20px;height:20px;">
+            <img src="../public/assets/navigation_logo.jpg" style="float:left;width:20px;height:20px;">
             <b>Navigation</b><br>
             <a href="http://localhost:63342/ace_training/views/dashboard.php">Dashboard</a><br>
             <a href="http://localhost:63342/ace_training/views/events.php">Events</a><br>
@@ -86,7 +87,7 @@ include "../components/header.php";
 </html>
 
 <?php
-include "../components/footer.php";
+include "../includes/footer.php";
 ?>
 
 

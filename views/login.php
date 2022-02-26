@@ -1,5 +1,5 @@
 <?php
-include "../components/header.php";
+include ("../includes/header.php");
 include "../utils/connection.php";
 global $conn;
 session_start();
