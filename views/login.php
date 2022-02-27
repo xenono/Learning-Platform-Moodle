@@ -1,6 +1,6 @@
 <?php
 include ("../includes/header.php");
-include "../utils/connection.php";
+include ("../config/connection.php");
 global $conn;
 session_start();
 $isError = false;
