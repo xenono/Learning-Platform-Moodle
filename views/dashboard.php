@@ -37,14 +37,7 @@ include("../config/Connection.php");
     </div>
     <div class="navigation-box">
         <h2>Welcome</h2>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-home" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Back to home page</a>
-            </div>
-        </div>
+
         <div class="box">
             <div class="icon">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -71,14 +64,7 @@ include("../config/Connection.php");
                 <a href="">University faculty</a>
             </div>
         </div>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-book" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Library Resources</a>
-            </div>
-        </div>
+        
     </div>
 
 </div>
