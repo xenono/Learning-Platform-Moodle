@@ -1,9 +1,10 @@
 <?php
+include("../controllers/Auth.php");
+include ("../config/Connection.php");
 include ("../includes/header.php");
-include "../utils/connection.php";
-global $conn;
 session_start();
 $isError = false;
+global $conn;
 if(isset($_POST["student-id"]) && isset($_POST["password"])){
     $userId= $_POST["student-id"];
     $password = $_POST["password"];
