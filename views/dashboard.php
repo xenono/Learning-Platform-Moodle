@@ -1,7 +1,20 @@
 <?php
 include("../includes/header.php");
-// include "../session/auth.php"
+include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include("../config/Connection.php");
+
+global $conn;
+$userId = $_SESSION["userId"];
+$sql = "SELECT course_id,courseName FROM studentcourse INNER JOIN course ON studentcourse.course_id=course.courseId WHERE student_id='$userId' ";
+$result = $conn->query($sql);
+echo mysqli_error($conn);
+if($result->num_rows > 0) {
+    while($row = mysqli_fetch_assoc($result)){
+        echo $row["courseName"];
+    }
+}
+
+
 ?>
 
 <!DOCTYPE html>

@@ -7,3 +7,7 @@ class Auth
         echo $user;
     }
 }
+
+function checkUserType($userType, $allowedUsers){
+    return true;
+}

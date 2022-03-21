@@ -1,5 +1,12 @@
 <?php
 require_once "../config/Connection.php";
+
+//START TRANSACTION;
+//INSERT INTO user (name,surname,phoneNumber,address,email,password,dateOfBirth,userType)
+//VALUES			 ("name","surname","phoneNUmber","address","email@email.com","password","dateOfBirth","student");
+//SET @userId := LAST_INSERT_ID();
+//INSERT INTO student (student_id,fees,personal_tutor_id) VALUES (@userId,1000,0);
+//COMMIT;
 global $conn;
 if(isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["phoneNumber"]) && isset($_POST["email"]) && isset($_POST["address"])){
     $name = $_POST["firstName"];
