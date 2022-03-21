@@ -6,6 +6,5 @@ while(!feof($env)){
     $value = explode('"',$line)[1];
     $_ENV[$key] = $value;
 }
-
 fclose($env);
 ?>
