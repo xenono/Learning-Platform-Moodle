@@ -1,3 +1,8 @@
+/* Global Color Variables */
+:root {
+    --orange: #F98012;
+    --baige: #FFE9D0;
+}
 /* Global styles*/
 html,body {
 
@@ -44,11 +49,7 @@ a.current {
 .block {
     display: block;
 }
-/* Global Color Variables */
-:root {
-    --orange: #F98012;
-    --baige: #FFE9D0;
-}
+
 /* End OF Global Color Variables */
 /* Forms */
 .flex-form {
@@ -63,6 +64,9 @@ label {
     margin-bottom: 5px;
     text-align: center;
 }
+p {
+    font-size: 1.25rem;
+}
 input {
     width: 100%;
     margin-bottom: 15px;
@@ -73,17 +77,31 @@ input {
 }
 
 input:focus {
-    border: 0;
-    box-shadow: 0px 0px 15px blue;
+    border-color: #fff;
+    box-shadow: 0px 0px 15px var(--orange);
 }
 
 a:visited {
     color: initial;
 }
 
-button {
+.button, button{
+    font-size: 1.25rem;
+    color: #000;
     padding: 10px 20px;
-    width: 75px;
+    text-align: center;
+    outline: none;
+    background-color: var(--baige);
+    border: 2px solid var(--orange);
+    box-shadow: 2px 2px 6px gray;
+}
+
+.button:hover, button:hover {
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: white;
+    background-color: var(--orange);
+    transition: all 0.5s;
 }
 
 /* End of globals styles*/
