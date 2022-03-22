@@ -5,25 +5,33 @@ include("../config/Connection.php");
 
 global $conn;
 $userId = $_SESSION["userId"];
-$sql = "SELECT course_id,courseName FROM studentcourse INNER JOIN course ON studentcourse.course_id=course.courseId WHERE student_id='$userId' ";
+$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.course_id=course.courseId WHERE student_id='$userId' ";
 $result = $conn->query($sql);
 echo mysqli_error($conn);
-if($result->num_rows > 0) {
-    while($row = mysqli_fetch_assoc($result)){
-        echo $row["courseName"];
-    }
+$courses = array();
+if ($result->num_rows > 0) {
+    $courses = mysqli_fetch_all($result);
 }
-
-
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<div>
+    <?php if (count($courses) > 0) {
+        echo "<p>Your courses</p>";
+        foreach ($courses as $course) {
+            echo "<p>" . $course[0] . "</p>";
+        }
+    } else { ?>
+        <p>No courses</p>
+        <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
+    <?php } ?>
+</div>
 <div class="container">
+
     <div class="navigation-bar">
         <div class="navigation-content">
             <img src="../public/assets/navigation_logo.jpg" style="float:left;width:20px;height:20px;">
@@ -46,9 +54,10 @@ if($result->num_rows > 0) {
             <a href="http://localhost:63342/ace_training/views/grades.php">Grades</a><br>
             <a href="http://localhost:63342/ace_training/views/assignments.php">Assignment_Information</a><br>
         </div>
-        <div class = "navigation-content">
+        <div class="navigation-content">
             <b>Announcement</b>
-            <marquee behavior="scroll" direction="left">Hey listen....ACE Training is planning to launch a new course.</marquee>
+            <marquee behavior="scroll" direction="left">Hey listen....ACE Training is planning to launch a new course.
+            </marquee>
 
         </div>
     </div>
