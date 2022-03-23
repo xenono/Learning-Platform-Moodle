@@ -1,10 +1,8 @@
 <?php
 
-function getAllUsers($connection){
-        $query = "SELECT * FROM user";
-        return $connection->query($query);
-}
+class User {
+    public function __construct()
+    {
 
-function addUser($connection, $name,$surname,$phoneNumber,$email, $address, $dateOfBirth, $userType){
-
+    }
 }

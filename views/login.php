@@ -28,7 +28,8 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
     }
 }
 ?>
-<div class="wrapper-center">
+
+<div class="flex-column wrapper-center " >
     <form action="login.php" method="POST" class="flex-form">
         <h2>Login</h2>
         <label for="student-id">Student Number</label>
@@ -40,12 +41,9 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
         if($isError){?>
             <p>Credenitals not found!</p>
         <?php }?>
+        <p>Don't have an account?</p>
+        <a href="signup.php" class="button">Sign up</a>
     </form>
+
 </div>
-<?php
-if(isset($_SESSION["userId"])){
-    echo "Session is set";
-}
-
-
 ?>
