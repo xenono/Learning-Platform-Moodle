@@ -59,3 +59,6 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
     </form>
 </div>
 
+
+<?php include "../includes/footer.php"?>
+
