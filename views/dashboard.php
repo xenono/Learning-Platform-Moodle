@@ -19,6 +19,20 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<?php
+if (isset($_GET["formSubmission"])) {
+    $formSubmitted = $_GET["formSubmission"];
+    if($formSubmitted === "true"){?>
+        <div class="form-submission-success">
+            <p>Your form was successfully submitted</p>
+            <p>Please wait for the course tutor to review your application</p>
+        </div>
+    <?php }
+}
+?>
+<div>
+
+</div>
 <div>
     <?php if (count($courses) > 0) {
         echo "<p>Your courses</p>";
@@ -27,8 +41,9 @@ if ($result->num_rows > 0) {
         }
     } else { ?>
         <p>No courses</p>
-        <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
     <?php } ?>
+    <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
+
 </div>
 <div class="container">
 
