@@ -4,3 +4,4 @@ if(!isset($_SESSION["userId"]) || !isset($_SESSION["isLoggedIn"]) || !isset($_SE
     header('Location: ../views/login.php');
 }
 
+
