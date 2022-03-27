@@ -18,14 +18,15 @@ if(isset($_POST["course"]) && $_POST["course"] !== null){
     $check = "SELECT * FROM studentcourse where student_id = $studentId && course_id = $courseId";
     $res = $conn ->query($check);
     $sql = mysqli_fetch_array($res , MYSQLI_NUM);
-    if($sql[0] > 1){
+    if($sql > 1){
         echo "You have already submitted the application for this course!";
     }
     else {
         $sql = "INSERT INTO studentcourse (student_id,course_id) VALUES ('$studentId','$courseId')";
         $res = $conn->query($sql);
         if ($res) {
-            Header("Location: dashboard.php?formSubmission=true");
+
+
         } else {
             echo "There was an error while enrolling on to a course";
             echo mysqli_error($conn);

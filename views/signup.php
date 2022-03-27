@@ -18,7 +18,10 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
     $address = $_POST["address"];
     $dateOfBirth = $_POST["dateOfBirth"];
     $password = $_POST["password"];
-    $conn->begin_transaction();
+    $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth)
+    VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth');");
+
+    /*$conn->begin_transaction();
     $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth)
     VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth');");
     $conn->query("SET @userId := LAST_INSERT_ID();");
@@ -31,7 +34,7 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
         echo mysqli_error($conn) . "<br>";
         echo mysqli_errno($conn) . "<br>";
         echo mysqli_sqlstate($conn) . "<br>";
-    }
+    }*/
 }
 ?>
 
