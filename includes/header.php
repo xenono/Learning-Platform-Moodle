@@ -27,6 +27,7 @@ $currentPage =  end($currentPage);
 
         <nav class="nav">
                 <a class="nav-item <?php if($currentPage == "dashboard.php") {echo "nav-item-active";}?>" href="../views/dashboard.php">dashboard</a>
+                <a class="nav-item <?php if($currentPage == "admin.php") {echo "nav-item-active";}?>" href="../views/admin.php">Admin</a>
                 <div class="nav-item-dropdown">
                     <span class="nav-item  <?php if($currentPage == "courses.php") {echo "nav-item-active";}?>" id="course-dropdown-parent" href="../views/courses.php">courses</span>
                     <div class="nav-item-course-dropdown" id="course-dropdown-list">
