@@ -13,7 +13,7 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
         $res = mysqli_query($conn, $sqlQuery);
         if(mysqli_num_rows($res) > 0){
             while($row = mysqli_fetch_array($res)){
-                if($row["id"] == $userId && $row["password"] == $password){
+                if($row["id"] == $userId && $row["password"] == $password && $row["userAuthorised"] == 1){
                     $_SESSION["isLoggedIn"] = true;
                     $_SESSION["userId"] = $userId;
                     $_SESSION["name"] = $row["name"];
@@ -22,6 +22,7 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
                 }
             }
             $isError = true;
+            echo "<p>Unauthorised access! Sorry our admin has not authorised you. Please wait.....</p>";
         }
     } else {
         $isError = true;
