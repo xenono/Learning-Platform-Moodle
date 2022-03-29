@@ -12,10 +12,9 @@ function authoriseEnrollmentCourse($conn){
         $studentId = $_POST["student"];
         $Approved = $_POST["courseApproved"];
         $Approved = 1;
-
         $sql = "UPDATE studentcourse SET course_approved=$Approved WHERE course_id = $courseId AND student_id = $studentId ";
         if ($conn->query($sql) === TRUE) {
-            echo "Record $courseId successfully";
+            echo "Record updated successfully";
         } else {
             echo "Error updating record: " . $conn->error;
         }
@@ -40,22 +39,56 @@ function rejectEnrollmentCourse($conn){
 
 function authoriseStudent($conn){
     if (isset($_POST['authorise']) && $_POST['id']){
-
+        extract($_POST);
         $id = $_POST['id'];
         $userAuthorised = $_POST['userAuthorised'];
         $userAuthorised = 1;
         $sql = "UPDATE user SET userAuthorised = $userAuthorised WHERE id = $id  ";
         if ($conn->query($sql) === TRUE) {
-            echo "Record created successfully";
-
-        } else {
+// adding the approved students to 'student' table
+            $sqladd = "INSERT INTO student (student_id) VALUES ($id)";
+            $res = mysqli_query($conn,$sqladd);
+            if ($res){
+                echo "Student added to the student table successfully";
+            }
+        }
+        else {
             echo "Error updating record: " . $conn->error;
         }
 
     }
 
 }
-function rejectStudentEnrollment($conn){
+function rejectStudent($conn){
+    if(isset($_POST['reject']) && $_POST['id']){
+        $id = $_POST['id'];
+        $sql = "DELETE FROM user where id = $id";
+        if ($conn->query($sql) === TRUE) {
+            echo "Record deleted successfully";
+        } else {
+            echo "Error updating record: " . $conn->error;
+        }
+    }
+}
+
+function authoriseTutor($conn){
+    if (isset($_POST['authorise']) && $_POST['id']){
+        extract($_POST);
+        $id = $_POST['id'];
+        $userAuthorised = $_POST['userAuthorised'];
+        $userAuthorised = 1;
+        $sql = "UPDATE user SET userAuthorised = $userAuthorised WHERE id = $id";
+        if(($conn)->query($sql) == True){
+            $sqladd = "INSERT INTO tutor (tutor_id) VALUES ($id)";
+            if ($conn->query($sqladd) === TRUE) {
+                echo "Record updated successfully";
+            } else {
+                echo "Error updating record: " . $conn->error;
+            }
+        }
+    }
+}
+function rejectTutor($conn){
     if(isset($_POST['reject']) && $_POST['id']){
         $id = $_POST['id'];
         $sql = "DELETE FROM user where id = $id";

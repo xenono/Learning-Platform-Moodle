@@ -443,7 +443,7 @@ footer div p {
     position: relative;
     width: calc(250px - 30px);
     height: calc(250px - 30px);
-    background: #59f359;
+    background: #e76e34;
     float:left;
     margin: 30px;
     box-sizing: border-box;
@@ -456,7 +456,7 @@ footer div p {
     left:0;
     width:100%;
     height :100%;
-    background: palegreen;
+    background: #f1a15c;
     transition :0.5s;
     z-index:1;
 }
