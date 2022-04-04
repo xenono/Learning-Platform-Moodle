@@ -10,4 +10,5 @@ class Auth
 
 function checkUserType($userType, $allowedUsers){
     return true;
+
 }

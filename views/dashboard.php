@@ -57,8 +57,12 @@ if (isset($_GET["formSubmission"])) {
             <div class="tooltip">
                 <a href="">My_Courses</a>
                 <span class="tooltiptext">
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE1&week=1">Core1</a><br>
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE2&week=1">Core2</a>
+                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE1&week=1">Website development</a><br>
+                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE2&week=1">Networking</a><br>
+                    <a href="">C++</a><br>
+                    <a href="">Software Engineering</a><br>
+                    <a href="">Robotics</a><br>
+                    <a href="">AI</a>
                 </span>
             </div>
             <br>
@@ -74,14 +78,7 @@ if (isset($_GET["formSubmission"])) {
     </div>
     <div class="navigation-box">
         <h2>Welcome</h2>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-home" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Back to home page</a>
-            </div>
-        </div>
+
         <div class="box">
             <div class="icon">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -108,14 +105,7 @@ if (isset($_GET["formSubmission"])) {
                 <a href="">University faculty</a>
             </div>
         </div>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-book" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Library Resources</a>
-            </div>
-        </div>
+
     </div>
 
 </div>

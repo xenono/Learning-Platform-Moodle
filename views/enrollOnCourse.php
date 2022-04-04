@@ -10,17 +10,29 @@ if($res->num_rows > 0 ){
     $courses = mysqli_fetch_all($res, MYSQLI_ASSOC);
 }
 if(isset($_POST["course"]) && $_POST["course"] !== null){
+
     $courseId = $_POST["course"];
-    echo $courseId;
     $studentId = $_SESSION["userId"];
-    $sql = "INSERT INTO studentcourse (student_id,course_id) VALUES ('$studentId','$courseId')";
-    $res = $conn->query($sql);
-    if($res){
-        Header("Location: dashboard.php?formSubmission=true");
-    } else {
-        echo "There was an error while enrolling on to a course";
-        echo mysqli_error($conn);
+
+    // check if the user is enrolling to the same course.
+    $check = "SELECT * FROM studentcourse where student_id = $studentId && course_id = $courseId";
+    $res = $conn ->query($check);
+    $sql = mysqli_fetch_array($res , MYSQLI_NUM);
+    if($sql > 1){
+        echo "You have already submitted the application for this course!";
     }
+    else {
+        $sql = "INSERT INTO studentcourse (student_id,course_id) VALUES ('$studentId','$courseId')";
+        $res = $conn->query($sql);
+        if ($res) {
+
+
+        } else {
+            echo "There was an error while enrolling on to a course";
+            echo mysqli_error($conn);
+        }
+    }
+
 }
 ?>
 <div class="wrapper-center">
