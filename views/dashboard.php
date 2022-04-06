@@ -9,7 +9,7 @@ $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.
 $result = $conn->query($sql);
 echo mysqli_error($conn);
 $courses = array();
-if ($result->num_rows > 0) {
+if ($result->num_rows > 0){
     $courses = mysqli_fetch_all($result);
 }
 ?>
