@@ -43,7 +43,7 @@ if ($courses->num_rows > 0) {
             $sql = "SELECT * FROM user WHERE userType = 'student' AND userAuthorised = 0";
             $result = mysqli_query($conn, $sql);
             authoriseStudent($conn);
-            rejectStudentEnrollment($conn);
+            rejectStudent($conn);
             while ($row = $result->fetch_object()) {
                 ; ?>
                 <form method='post' action='admin.php'>
@@ -133,12 +133,10 @@ if ($courses->num_rows > 0) {
 
     <?php
     if(isset($_POST["addCourseForm"])){
-        extract($_POST);
-        /**
-         * @var string $courseLeader
-         * @var string $courseName
-         * @var number $courseProgramme
-         */
+        $courseLeader = mysqli_escape_string($conn,$_POST["courseLeader"]);
+        $courseName = mysqli_escape_string($conn,$_POST["courseName"]);
+        $courseProgramme = mysqli_escape_string($conn,$_POST["courseProgramme"]);
+
         $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
         if(!$conn->query($sql)){
             echo mysqli_error($conn);
@@ -158,11 +156,8 @@ if ($courses->num_rows > 0) {
     </form>
 <?php
 if(isset($_POST["addLectureForm"]) && $_FILES["file"]){
-    extract($_POST);
-    /**
-     * @var string $courseId
-     * @var string $lectureDescription
-     * */
+    $courseId = mysqli_escape_string($conn,$_POST["courseId"]);
+    $lectureDescription = mysqli_escape_string($conn,$_POST["lectureDescription"]);
     $fileData = $_FILES["file"];
 
     $tmpName =$fileData["tmp_name"];
