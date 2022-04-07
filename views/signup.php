@@ -11,14 +11,14 @@ require_once "../config/Connection.php";
 //COMMIT;
 global $conn;
 if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["name"]) && isset($_POST["phoneNumber"]) && isset($_POST["email"]) && isset($_POST["userType"])&&isset($_POST["address"])) {
-    $name = $_POST["name"];
-    $surname = $_POST["surname"];
-    $phoneNumber = $_POST["phoneNumber"];
-    $email = $_POST["email"];
-    $address = $_POST["address"];
-    $dateOfBirth = $_POST["dateOfBirth"];
-    $userType = $_POST["userType"];
-    $password = $_POST["password"];
+    $name = mysqli_escape_string($conn,$_POST["name"]);
+    $surname = mysqli_escape_string($conn,$_POST["surname"]);
+    $phoneNumber = mysqli_escape_string($conn,$_POST["phoneNumber"]);
+    $email = mysqli_escape_string($conn,$_POST["email"]);
+    $address = mysqli_escape_string($conn,$_POST["address"]);
+    $dateOfBirth = mysqli_escape_string($conn,$_POST["dateOfBirth"]);
+    $userType = mysqli_escape_string($conn,$_POST["userType"]);
+    $password = mysqli_escape_string($conn,$_POST["password"]);
     $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth,userType)
     VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth','$userType');");
 

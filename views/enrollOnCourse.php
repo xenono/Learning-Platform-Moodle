@@ -11,7 +11,7 @@ if($res->num_rows > 0 ){
 }
 if(isset($_POST["course"]) && $_POST["course"] !== null){
 
-    $courseId = $_POST["course"];
+    $courseId = mysqli_escape_string($conn,$_POST["course"]);
     $studentId = $_SESSION["userId"];
 
     // check if the user is enrolling to the same course.
