@@ -17,6 +17,7 @@ $currentPage =  end($currentPage);
     <!-- End of fonts imports -->
     <!-- Import CSS -->
     <link href="../public/css/styles.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- End of CSS imports -->
 </head>
 <body>

@@ -5,18 +5,19 @@ include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
 //print_r($_SESSION);
 
-if (isset($_SESSION["userType"]) && $_SESSION["userType"] != "student") {
+if (isset($_SESSION["userType"]) && $_SESSION["userType"] === "student") {
+        echo "<div class = 'error-box'>
+         <p> Unauthorised Access!</p>
+         </div>;";
+        die();
+}
 
-    $sql = "SELECT * from course";
-    $courses = $conn->query($sql);
-    if ($courses->num_rows > 0) {
-        $courses = mysqli_fetch_all($courses);
-    }
+$sql = "SELECT * from course";
+$courses = $conn->query($sql);
+if ($courses->num_rows > 0) {
+    $courses = mysqli_fetch_all($courses);
+}
 ?>
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-
 
 <div class="admin">
     <h1> Admin Page </h1>
@@ -183,12 +184,3 @@ if (isset($_SESSION["userType"]) && $_SESSION["userType"] != "student") {
     </form>
   </div>
 </div>
-<?php
-}
-else{
-    echo "<div class = 'error-box'>
-          <p>Unauthorised Access</p>
-          <a href = '../views/index.php'>Click to continue!</a>
-              </div>";
-}
-?>
