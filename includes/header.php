@@ -17,6 +17,7 @@ $currentPage =  end($currentPage);
     <!-- End of fonts imports -->
     <!-- Import CSS -->
     <link href="../public/css/styles.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- End of CSS imports -->
 </head>
 <body>
@@ -26,8 +27,9 @@ $currentPage =  end($currentPage);
     <header>
 
         <nav class="nav">
-                <a class="nav-item <?php if($currentPage == "dashboard.php") {echo "nav-item-active";}?>" href="../views/dashboard.php">dashboard</a>
-                <a class="nav-item <?php if($currentPage == "admin.php") {echo "nav-item-active";}?>" href="../views/admin.php">Admin</a>
+                <a class = "nav-item" <?php if($currentPage == "index.php") {echo "nav-item-active";}?>" href = "../views/index.php">Home Page </a>
+                <a class="nav-item" <?php if($currentPage == "dashboard.php") {echo "nav-item-active";}?>" href="../views/dashboard.php">Dashboard</a>
+                <a class="nav-item" <?php if($currentPage == "admin.php") {echo "nav-item-active";}?>" href="../views/admin.php">Admin</a>
                 <div class="nav-item-dropdown">
                     <span class="nav-item  <?php if($currentPage == "courses.php") {echo "nav-item-active";}?>" id="course-dropdown-parent" href="../views/courses.php">courses</span>
                     <div class="nav-item-course-dropdown" id="course-dropdown-list">

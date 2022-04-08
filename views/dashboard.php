@@ -9,15 +9,12 @@ $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.
 $result = $conn->query($sql);
 echo mysqli_error($conn);
 $courses = array();
-if ($result->num_rows > 0) {
+if ($result->num_rows > 0){
     $courses = mysqli_fetch_all($result);
 }
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
 <body>
 <?php
 if (isset($_GET["formSubmission"])) {
