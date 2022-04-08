@@ -111,7 +111,18 @@ if ($courses->num_rows > 0) {
 
      <div class="page-content">
          <h2><i class="fa fa-file"> Add Course </i></h2>
-        
+        <?php
+        if(isset($_POST["addCourseForm"])){
+            $courseLeader = mysqli_escape_string($conn,$_POST["courseLeader"]);
+            $courseName = mysqli_escape_string($conn,$_POST["courseName"]);
+            $courseProgramme = mysqli_escape_string($conn,$_POST["courseProgramme"]);
+
+            $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
+            if(!$conn->query($sql)){
+                echo mysqli_error($conn);
+            }
+        }
+        ?>
         <form action="admin.php" method="POST" class="flex-form">
             <label for="courseName">Course Name</label>
             <input type="text" name="courseName" id="courseName">
