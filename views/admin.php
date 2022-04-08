@@ -113,12 +113,10 @@ if ($courses->num_rows > 0) {
          <h2><i class="fa fa-file"> Add Course </i></h2>
         <?php
         if(isset($_POST["addCourseForm"])){
-            extract($_POST);
-            /**
-             * @var string $courseLeader
-             * @var string $courseName
-             * @var number $courseProgramme
-             */
+            $courseLeader = mysqli_escape_string($conn,$_POST["courseLeader"]);
+            $courseName = mysqli_escape_string($conn,$_POST["courseName"]);
+            $courseProgramme = mysqli_escape_string($conn,$_POST["courseProgramme"]);
+
             $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
             if(!$conn->query($sql)){
                 echo mysqli_error($conn);
@@ -138,11 +136,8 @@ if ($courses->num_rows > 0) {
     <div class = "page-content">
     <?php
     if(isset($_POST["addLectureForm"]) && $_FILES["file"]){
-        extract($_POST);
-        /**
-         * @var string $courseId
-         * @var string $lectureDescription
-         * */
+        $courseId = mysqli_escape_string($conn,$_POST["courseId"]);
+        $lectureDescription = mysqli_escape_string($conn,$_POST["lectureDescription"]);
         $fileData = $_FILES["file"];
 
         $tmpName =$fileData["tmp_name"];
