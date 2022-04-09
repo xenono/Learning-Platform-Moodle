@@ -1,5 +1,4 @@
 <?php
-include("../controllers/Auth.php");
 include ("../config/Connection.php");
 include ("../includes/header.php");
 session_start();
