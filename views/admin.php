@@ -135,6 +135,29 @@ if ($courses->num_rows > 0) {
      </div>
     <div class = "page-content">
     <?php
+    if(isset($_POST["addCourseForm"])){
+        $courseLeader = mysqli_escape_string($conn,$_POST["courseLeader"]);
+        $courseName = mysqli_escape_string($conn,$_POST["courseName"]);
+        $courseProgramme = mysqli_escape_string($conn,$_POST["courseProgramme"]);
+
+        $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
+        if(!$conn->query($sql)){
+            echo mysqli_error($conn);
+        }
+    }
+
+    ?>
+    <h1>Add Course</h1>
+    <form action="admin.php" method="POST" class="flex-form">
+        <label for="courseName">Course Name</label>
+        <input type="text" name="courseName" id="courseName">
+        <label for="courseProgramme">Course Programme</label>
+        <input type="text" name="courseProgramme" id="courseProgramme">
+        <label for="courseLeader">Course Leader</label>
+        <input type="text" name="courseLeader" id="courseLeader">
+        <button type="submit" value="true" name="addCourseForm">Add</button>
+    </form>
+<?php
     if(isset($_POST["addLectureForm"]) && $_FILES["file"]){
         $courseId = mysqli_escape_string($conn,$_POST["courseId"]);
         $lectureDescription = mysqli_escape_string($conn,$_POST["lectureDescription"]);
