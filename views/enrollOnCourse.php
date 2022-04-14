@@ -15,14 +15,14 @@ if(isset($_POST["course"]) && $_POST["course"] !== null){
     $studentId = $_SESSION["userId"];
 
     // check if the user is enrolling to the same course.
-    $check = "SELECT * FROM studentcourse where student_id = $studentId && course_id = $courseId";
+    $check = "SELECT * FROM studentcourse where studentId = $studentId && courseId = $courseId";
     $res = $conn ->query($check);
     $sql = mysqli_fetch_array($res , MYSQLI_NUM);
     if($sql > 1){
         echo "You have already submitted the application for this course!";
     }
     else {
-        $sql = "INSERT INTO studentcourse (student_id,course_id) VALUES ('$studentId','$courseId')";
+        $sql = "INSERT INTO studentcourse (studentId,courseId) VALUES ('$studentId','$courseId')";
         $res = $conn->query($sql);
         if ($res) {
 

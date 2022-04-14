@@ -72,25 +72,24 @@ if ($courses->num_rows > 0) {
           <h2><u> Enrollment of students onto applied courses</u></h2>
           <div>
           <?php
-          $sql = "SELECT studentcourse.student_id ,studentcourse.course_id , studentcourse.course_approved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.student_id = user.id where course_approved = 0";
+          $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
           $result = mysqli_query($conn,$sql);
           authoriseEnrollmentCourse($conn);
           rejectEnrollmentCourse($conn);
-           while($row = $result->fetch_object()){
-              ?>
+           while($row = $result->fetch_object()){?>
               <form method ='post' action = 'admin.php'>
               <table>
-              <tr><td><?php echo $row->student_id ?> </td>
+              <tr><td><?php echo $row->studentId ?> </td>
                   <td><?php echo $row->name ?></td>
                   <td><?php echo $row->surname ?></td>
-                  <td><?php echo $row->course_id ?></td>
+                  <td><?php echo $row->courseId ?></td>
 
                   <td><input type='submit' name = 'authorise' value = 'Authorise'</td>
                   <td><input type='submit' name = 'reject' value = 'Reject'</td>
               </tr></table>
-              <input type = 'hidden' name = 'courseApproved' value = '<?php echo $row->course_approved ?>'/>
-                  <input type = 'hidden' name = 'course' value = '<?php echo $row->course_id ?>'/>
-                  <input type = 'hidden' name = 'student' value = '<?php echo $row->student_id ?>'/>
+              <input type = 'hidden' name = 'courseApproved' value = '<?php echo $row->courseApproved ?>'/>
+                  <input type = 'hidden' name = 'course' value = '<?php echo $row->courseId ?>'/>
+                  <input type = 'hidden' name = 'student' value = '<?php echo $row->studentId ?>'/>
                </form>
 
       <?php
@@ -205,3 +204,10 @@ if(isset($_POST["addLectureForm"]) && $_FILES["file"]){
 
 
   </div>
+<<<<<<< Updated upstream
+=======
+</div>
+<?php
+include("../includes/footer.php");
+?>
+>>>>>>> Stashed changes
