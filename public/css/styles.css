@@ -73,6 +73,7 @@ select:active {
     justify-content: space-evenly;
     align-items: center;
     width: 15%;
+    min-width: 450px;
 }
 label {
     font-size: 1.25rem;
@@ -419,7 +420,7 @@ footer div p {
     width: 1200px;
     margin: 50px auto;
     background: whitesmoke;
-    height: 900px;
+    height: 900px;F
 
 }
 .navigation-bar {
@@ -494,3 +495,53 @@ footer div p {
 }
 /* The navigation menu links */
 
+.error-box{
+    margin-top: 50px;
+    position: absolute;
+    margin-left: 850px;
+    margin-right: 150px;
+    border: 5px solid var(--orange);
+    text-align: center;
+}
+.error-box p{
+     color: red;
+}
+.error-box a{
+    color: black;
+}
+.error-box a:hover{
+    color: var(--orange);
+}
+.admin {
+    margin: 50px auto;
+    width: 80%;
+    background: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.admin h1{
+    color: var(--orange);
+    text-align: center;
+}
+.admin h2{
+    color: var(--orange);
+}
+
+.admin table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #ee6631;
+}
+.admin td {
+    width: 100%;
+    height: 5px;
+    border: 1px solid #ccc;
+    row-span: 1;
+}
+.admin .page-content{
+    min-width: 800px;
+    margin: 10px;
+    padding: 10px;
+}

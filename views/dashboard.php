@@ -2,27 +2,19 @@
 include("../includes/header.php");
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include("../config/Connection.php");
-
 global $conn;
+if(!isset($_SESSION["userId"])){
+    Header("Location: login.php");
+}
 $userId = $_SESSION["userId"];
 $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
 $result = $conn->query($sql);
 echo mysqli_error($conn);
 $courses = array();
-if ($result->num_rows > 0) {
+if ($result->num_rows > 0){
     $courses = mysqli_fetch_all($result);
 }
 ?>
-<<<<<<< Updated upstream
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-=======
-
->>>>>>> Stashed changes
 <?php
 if (isset($_GET["formSubmission"])) {
     $formSubmitted = $_GET["formSubmission"];
