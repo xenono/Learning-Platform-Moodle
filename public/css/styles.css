@@ -232,12 +232,14 @@ footer div p {
 }
 .courses-content-wrapper {
     display: flex;
-    margin-top: 75px    ;
+    margin-top: 75px;
+    min-height: 81.8vh;
 }
 .course-content {
     display: flex;
     flex-direction: column;
     margin-left: 5%;
+    min-width: 75%;
 }
 .course-content-container {
     margin-bottom: 50px;

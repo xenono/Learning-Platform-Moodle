@@ -5,7 +5,7 @@ include("../config/Connection.php");
 
 global $conn;
 $userId = $_SESSION["userId"];
-$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.course_id=course.courseId WHERE student_id='$userId' ";
+$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
 $result = $conn->query($sql);
 echo mysqli_error($conn);
 $courses = array();
@@ -13,9 +13,13 @@ if ($result->num_rows > 0){
     $courses = mysqli_fetch_all($result);
 }
 ?>
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html>
 <body>
+=======
+
+>>>>>>> Stashed changes
 <?php
 if (isset($_GET["formSubmission"])) {
     $formSubmitted = $_GET["formSubmission"];
@@ -28,7 +32,6 @@ if (isset($_GET["formSubmission"])) {
 }
 ?>
 <div>
-
 </div>
 <div>
     <?php if (count($courses) > 0) {
@@ -106,9 +109,6 @@ if (isset($_GET["formSubmission"])) {
     </div>
 
 </div>
-
-</body>
-</html>
 
 <?php
 include "../includes/footer.php";
