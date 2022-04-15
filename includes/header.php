@@ -38,10 +38,6 @@ if (strcmp($currentPage, "login.php") && strcmp($currentPage, "signup.php")) {
     <header>
 
         <nav class="nav">
-<<<<<<< Updated upstream
-                <a class="nav-item <?php if($currentPage == "dashboard.php") {echo "nav-item-active";}?>" href="../views/dashboard.php">dashboard</a>
-                <a class="nav-item <?php if($currentPage == "admin.php") {echo "nav-item-active";}?>" href="../views/admin.php">Admin</a>
-=======
             <?php if(!isset($_SESSION["isLoggedIn"]) || $_SESSION["isLoggedIn"] === false) {?>
             <a class="nav-item <?php if ($currentPage == "index.php") {
                 echo "nav-item-active";
@@ -54,7 +50,6 @@ if (strcmp($currentPage, "login.php") && strcmp($currentPage, "signup.php")) {
                 <a class="nav-item <?php if ($currentPage == "admin.php") {
                     echo "nav-item-active";
                 } ?>" href="../views/admin.php">Admin</a>
->>>>>>> Stashed changes
                 <div class="nav-item-dropdown">
                     <span class="nav-item  <?php if ($currentPage == "courses.php") {
                         echo "nav-item-active";

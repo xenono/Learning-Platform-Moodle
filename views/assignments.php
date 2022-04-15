@@ -35,7 +35,6 @@ $core2_quizzes = array('Web Dev Quiz 1', 'Web Dev Quiz 2', 'Networks Quiz 1','Ne
 					</li>
 				<?php } ?>
 			</ul>
-
 			<ul class = "core1-assignment-titles">
 				<h2>Assignment Title</h2>
 				<?php foreach($core1_assignments as $assignment){?>

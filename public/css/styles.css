@@ -494,3 +494,56 @@ footer div p {
 }
 /* The navigation menu links */
 
+.error-box{
+    margin-top: 50px;
+    position: absolute;
+    margin-left: 850px;
+    margin-right: 150px;
+    border: 5px solid var(--orange);
+    text-align: center;
+}
+.error-box p{
+     color: red;
+}
+.error-box a{
+    color: black;
+}
+.error-box a:hover{
+    color: var(--orange);
+}
+.admin {
+    position: relative;
+    width: 100%;
+    margin-right: 50px;
+    margin-top: 50px ;
+    margin-left: 50px;
+    background: whitesmoke;
+    height: 100%;
+}
+.admin h1{
+    color: var(--orange);
+    text-align: center;
+}
+.admin h2{
+    color: var(--orange);
+}
+
+.admin table {
+    border-collapse: collapse;
+    border: 2px solid #ee6631;
+    width: 20px;
+}
+
+.admin td {
+    width: 100%;
+    height: 5px;
+    border: 1px solid #ccc;
+    row-span: 1;
+}
+.admin .page-content{
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
