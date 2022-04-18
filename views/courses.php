@@ -5,19 +5,20 @@ global $conn;
 $currentCourse = null;
 $currentLecture = "1";
 $lectures = [];
+$resources = [];
+$lectureResources = [];
 if (isset($_GET["courseId"]) && isset($_GET["lecture"])) {
     $courseId = $_GET["courseId"];
     $currentLecture = $_GET["lecture"];
-    $courseInfo = getCourseName($conn,$courseId);
+    $courseInfo = getCourseInfo($conn,$courseId);
     $currentCourse = $courseInfo->courseName;
     $lectures = getAllLectures($conn,$courseId);
+    $lectureResources = getLectureResources($conn, $lectures[$currentLecture - 1]->lectureId);
 }
 
-if (!$currentCourse || !$lectures) {
-    echo "<h1> Database error!!!</h1>";
-    require_once "../includes/footer.php";
-    die();
-}
+//if (!$currentCourse || !$lectures) {
+//    Header("Location: dashboard.php");
+//}
 ?>
 
 <div class="courses-content-wrapper">
@@ -40,9 +41,17 @@ if (!$currentCourse || !$lectures) {
             <p class="course-content-description">
                 <?php echo $lectures[$currentLecture - 1]->lectureDescription?>
             </p>
+            <?php
+            foreach ($lectureResources as $lectureResource) { ?>
             <div class="file-wrapper">
                 <img src="../public/assets/pptx.png" alt="" class="file-icon">
-                <p class="file-name">3--CSS-part.pptx</p>
+                <p class="file-name"><?php echo $lectureResource->fileName ?></p>
+            </div>
+            <?php } ?>
+            <h1> STATIC </h1>
+            <div class="file-wrapper">
+                <img src="../public/assets/pptx.png" alt="" class="file-icon">
+                <p class="file-name">3--Lecture.pptx</p>
             </div>
             <div class="file-wrapper">
                 <img src="../public/assets/file.png" alt="" class="file-icon">
