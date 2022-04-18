@@ -22,7 +22,10 @@ global $conn;
     <!-- End of fonts imports -->
     <!-- Import CSS -->
     <link href="../public/css/styles.css" type="text/css" rel="stylesheet"/>
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+=======
+>>>>>>> main
     <!-- End of CSS imports -->
     <!-- AJAX   -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -36,6 +39,7 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
 } ?>
 
 
+<<<<<<< HEAD
 <header>
     <nav class="nav">
         <?php if (!isset($_SESSION["isLoggedIn"]) || $_SESSION["isLoggedIn"] === false || strcmp($currentPage, "login.php") || strcmp($currentPage, "signup.php")) { ?>
@@ -50,6 +54,22 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
                 echo "nav-item-active";
             } ?>" href="../views/admin.php">Admin</a>
             <div class="nav-item-dropdown">
+=======
+        <nav class="nav">
+            <?php if(!isset($_SESSION["isLoggedIn"]) || $_SESSION["isLoggedIn"] === false) {?>
+            <a class="nav-item <?php if ($currentPage == "index.php") {
+                echo "nav-item-active";
+            } ?>" href="../views/index.php">Home Page </a>
+            <?php } ?>
+            <?php if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] == true) { ?>
+                <a class="nav-item <?php if ($currentPage == "dashboard.php") {
+                    echo "nav-item-active";
+                } ?>" href="../views/dashboard.php">Dashboard</a>
+                <a class="nav-item <?php if ($currentPage == "admin.php") {
+                    echo "nav-item-active";
+                } ?>" href="../views/admin.php">Admin</a>
+                <div class="nav-item-dropdown">
+>>>>>>> main
                     <span class="nav-item  <?php if ($currentPage == "courses.php") {
                         echo "nav-item-active";
                     } ?>" id="course-dropdown-parent" href="../views/courses.php">courses</span>

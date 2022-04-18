@@ -81,62 +81,61 @@ if ($courses->num_rows > 0) {
         ?>
 
     </div>
-    <div class="page-content">
-        <h2><i class="fa fa-university"> Tutors Enrollment </i></h2>
+      <div class="page-content">
+          <h2><i class="fa fa-university"> Tutors Enrollment </i> </h2>
+              <?php
+              $sql = "SELECT * FROM user WHERE userType = 'tutor' AND userAuthorised = 0";
+              $result = mysqli_query($conn, $sql);
+              authoriseTutor($conn);
+              //rejectTutor($conn);
+              while($row = $result->fetch_object()){?>
+                  <form method ='post' action = 'admin.php'>
+                      <table>
+                          <tr><td><?php echo $row->id ?> </td>
+                              <td><?php echo $row->name ?></td>
+                              <td><?php echo $row -> surname?></td>
+                              <td><?php echo $row -> phoneNumber?></td>
+                              <td><?php echo $row -> email?></td>
+                              <td><?php echo $row -> address?></td>
+                              <td><?php echo $row -> dateOfBirth?></td>
+                              <td><input type='submit' name = 'authorise' value = 'Authorise'</td>
+                              <td><input type='submit' name = 'reject' value = 'Reject'</td>
+                          </tr></table>
+                      <input type = 'hidden' name = 'userAuthorised' value = '<?php echo $row->userAuthorised ?>'/>
+                      <input type = 'hidden' name = 'id' value = '<?php echo $row->id ?>'/>
+
+                  </form>
+
+                  <?php
+              }
+              ?>
+          </div>
+
+     <div class="page-content">
+         <h2><i class="fa fa-file"> Add Course </i></h2>
         <?php
-        $sql = "SELECT * FROM user WHERE userType = 'tutor' AND userAuthorised = 0";
-        $result = mysqli_query($conn, $sql);
-        authoriseTutor($conn);
-        //rejectTutor($conn);
-        while ($row = $result->fetch_object()) {
-            ?>
-            <form method='post' action='admin.php'>
-                <table>
-                    <tr>
-                        <td><?php echo $row->id ?> </td>
-                        <td><?php echo $row->name ?></td>
-                        <td><?php echo $row->surname ?></td>
-                        <td><?php echo $row->phoneNumber ?></td>
-                        <td><?php echo $row->email ?></td>
-                        <td><?php echo $row->address ?></td>
-                        <td><?php echo $row->dateOfBirth ?></td>
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
-                    </tr>
-                </table>
-                <input type='hidden' name='userAuthorised' value='<?php echo $row->userAuthorised ?>'/>
-                <input type='hidden' name='id' value='<?php echo $row->id ?>'/>
+        if(isset($_POST["addCourseForm"])){
+            $courseLeader = mysqli_escape_string($conn,$_POST["courseLeader"]);
+            $courseName = mysqli_escape_string($conn,$_POST["courseName"]);
+            $courseProgramme = mysqli_escape_string($conn,$_POST["courseProgramme"]);
 
-            </form>
-
-            <?php
+            $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
+            if(!$conn->query($sql)){
+                echo mysqli_error($conn);
+            }
         }
         ?>
-    </div>
-    <?php
-    if (isset($_POST["addCourseForm"])) {
-        $courseLeader = mysqli_escape_string($conn, $_POST["courseLeader"]);
-        $courseName = mysqli_escape_string($conn, $_POST["courseName"]);
-        $courseProgramme = mysqli_escape_string($conn, $_POST["courseProgramme"]);
-
-        $sql = "INSERT INTO course (courseName,courseLeader,courseProgramme) VALUES ('$courseName','$courseLeader','$courseProgramme')";
-        if (!$conn->query($sql)) {
-            echo mysqli_error($conn);
-        }
-    }
-
-    ?>
-    <h2><i class="fa fa-file"> Add Course </i></h2>
-    <form action="admin.php" method="POST" class="flex-form" style="margin-bottom: 50px;">
-        <label for="courseName">Course Name</label>
-        <input type="text" name="courseName" id="courseName">
-        <label for="courseProgramme">Course Programme</label>
-        <input type="text" name="courseProgramme" id="courseProgramme">
-        <label for="courseLeader">Course Leader</label>
-        <input type="text" name="courseLeader" id="courseLeader">
-        <button type="submit" value="true" name="addCourseForm">Add</button>
-    </form>
-
+        <form action="admin.php" method="POST" class="flex-form">
+            <label for="courseName">Course Name</label>
+            <input type="text" name="courseName" id="courseName">
+            <label for="courseProgramme">Course Programme</label>
+            <input type="text" name="courseProgramme" id="courseProgramme">
+            <label for="courseLeader">Course Leader</label>
+            <input type="text" name="courseLeader" id="courseLeader">
+            <button type="submit" value="true" name="addCourseForm">Add</button>
+        </form>
+     </div>
+    <div class = "page-content">
     <?php
     if (isset($_POST["addLectureForm"])) {
         $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
@@ -203,6 +202,7 @@ if ($courses->num_rows > 0) {
         <input type="file" name="file" id="file">
         <button type="submit" value="true" name="addResourceForm">Add</button>
     </form>
+  </div>
 </div>
 
 <?php

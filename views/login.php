@@ -3,20 +3,19 @@ include ("../config/Connection.php");
 include ("../includes/header.php");
 $isError = false;
 global $conn;
-if(isset($_POST["student-id"]) && isset($_POST["password"]) && isset($_POST["userType"])){
+if(isset($_POST["student-id"]) && isset($_POST["password"])){
     $userId= $_POST["student-id"];
     $password = $_POST["password"];
-    $userType = $_POST["userType"];
     if($userId && $password){
         $sqlQuery = "SELECT * FROM user";
         $res = mysqli_query($conn, $sqlQuery);
         if(mysqli_num_rows($res) > 0){
             while($row = mysqli_fetch_array($res)){
-                if($row["id"] == $userId && $row["password"] == $password && $row["userAuthorised"] == 1 && $row["userType"] == $userType){
+                if($row["id"] == $userId && $row["password"] == $password && $row["userAuthorised"] == 1 ){
                     $_SESSION["isLoggedIn"] = true;
                     $_SESSION["userId"] = $userId;
                     $_SESSION["name"] = $row["name"];
-                    $_SESSION["userType"] = $userType;
+                    $_SESSION["userType"] = $row["userType"];
                     header('Location: ./dashboard.php');
                     break;
                 }
@@ -35,8 +34,6 @@ if(isset($_POST["student-id"]) && isset($_POST["password"]) && isset($_POST["use
         <h2>Login</h2>
         <label for="student-id">Identity Number</label>
         <input type="text" name="student-id" id="student-id"/>
-        <label for="userType">User Type</label>
-        <input type = "text" name = "userType" id = "userType"/>
         <label for="password">Password</label>
         <input type="text" name="password" id="password"/>
         <button type="submit">Login</button>
