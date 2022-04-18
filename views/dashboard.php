@@ -1,20 +1,25 @@
 <?php
 include("../includes/header.php");
-include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/includes/auth.php";
 include("../config/Connection.php");
+
 global $conn;
-if(!isset($_SESSION["userId"])){
-    Header("Location: login.php");
-}
 $userId = $_SESSION["userId"];
-$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
+$sql = "SELECT studentcourse.courseId FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
 $result = $conn->query($sql);
+
+$sql2 = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId'";
+$results = $conn->query($sql2);
+
 echo mysqli_error($conn);
 $courses = array();
-if ($result->num_rows > 0){
-    $courses = mysqli_fetch_all($result);
+if ($results->num_rows > 0){
+    $courses = mysqli_fetch_all($results);
 }
 ?>
+<!DOCTYPE html>
+<html>
+<body>
 <?php
 if (isset($_GET["formSubmission"])) {
     $formSubmitted = $_GET["formSubmission"];
@@ -27,6 +32,7 @@ if (isset($_GET["formSubmission"])) {
 }
 ?>
 <div>
+
 </div>
 <div>
     <?php if (count($courses) > 0) {
@@ -104,6 +110,9 @@ if (isset($_GET["formSubmission"])) {
     </div>
 
 </div>
+
+</body>
+</html>
 
 <?php
 include "../includes/footer.php";

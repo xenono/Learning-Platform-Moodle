@@ -1,6 +1,6 @@
 <?php
 include("../includes/header.php");
-include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/includes/auth.php";
 include("../config/Connection.php");
 global $conn;
 $sqlCourses = "SELECT * FROM course";
@@ -15,7 +15,7 @@ if(isset($_POST["course"]) && $_POST["course"] !== null){
     $studentId = $_SESSION["userId"];
 
     // check if the user is enrolling to the same course.
-    $check = "SELECT * FROM studentcourse where studentId = $studentId && courseId = $courseId";
+    $check = "SELECT * FROM studentcourse where studentId = '$studentId' && courseId = '$courseId'";
     $res = $conn ->query($check);
     $sql = mysqli_fetch_array($res , MYSQLI_NUM);
     if($sql > 1){
