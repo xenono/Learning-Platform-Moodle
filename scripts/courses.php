@@ -38,12 +38,11 @@ function getLectureResources($conn, $lectureId): array
     return $resources;
 }
 
-function getCourseName($conn, $courseId): object
+function getCourseInfo($conn, $courseId): object
 {
     $sql = "SELECT courseName, courseProgramme FROM course WHERE courseId = $courseId";
     $res = $conn->query($sql);
     return $res->fetch_object();
-
 }
 
 ?>

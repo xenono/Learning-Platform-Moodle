@@ -88,6 +88,7 @@ if ($courses->num_rows > 0) {
               $result = mysqli_query($conn, $sql);
               authoriseTutor($conn);
               //rejectTutor($conn);
+              if($result->num_rows > 0) {
               while($row = $result->fetch_object()){?>
                   <form method ='post' action = 'admin.php'>
                       <table>
@@ -103,14 +104,36 @@ if ($courses->num_rows > 0) {
                           </tr></table>
                       <input type = 'hidden' name = 'userAuthorised' value = '<?php echo $row->userAuthorised ?>'/>
                       <input type = 'hidden' name = 'id' value = '<?php echo $row->id ?>'/>
-
                   </form>
 
                   <?php
+              } } else {
+                  echo "<h1 style='color:black;'>No tutors to authorise</h1>";
               }
               ?>
           </div>
+    <div class="page-content">
+        <table>
+            <tr>
+                <th>Course name</th>
+                <th>Course Tutor</th>
+                <th>Edit course</th>
+            </tr>
+            <?php foreach ($courses as $course) {?>
+                    <tr>
+                        <td><?php echo $course[1] ?></td>
+                        <td><?php echo $course[2] ?></td>
+                        <td style="padding: 10px;">
+                            <form action="adminEditCourse.php" method="POST" class="flex-column">
+                                <input type="text" hidden value="<?php echo $course[0] ?>" name="courseId">
+                                <button type="submit" style="margin: 0 auto;">Edit</button>
+                            </form>
+                        </td>
+                    </tr>
 
+            <?php } ?>
+        </table>
+    </div>
      <div class="page-content">
          <h2><i class="fa fa-file"> Add Course </i></h2>
         <?php
@@ -136,28 +159,6 @@ if ($courses->num_rows > 0) {
         </form>
      </div>
     <div class = "page-content">
-    <?php
-    if (isset($_POST["addLectureForm"])) {
-        $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
-        $lectureDescription = mysqli_escape_string($conn, $_POST["lectureDescription"]);
-        $sql = "INSERT INTO lecture(courseId,lectureDescription) VALUES ('$courseId','$lectureDescription');";
-        if (!$conn->query($sql)) {
-            echo mysqli_error($conn);
-        }
-    } ?>
-    <h1>Add lecture</h1>
-    <form action="admin.php" method="POST" class="flex-form" enctype="multipart/form-data" style="margin-bottom: 50px;">
-        <label for="courseId">Choose course</label>
-        <select name="courseId" id="courseId" required>
-            <?php
-            foreach ($courses as $course) { ?>
-                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
-        </select>
-        <label for="lectureDescription">Lecture Description</label>
-        <textarea id="lectureDescription" name="lectureDescription" required></textarea>
-        <button type="submit" value="true" name="addLectureForm">Add</button>
-    </form>
     <h1>Add files to lecture</h1>
     <!--    <h2><i class = "fa fa-upload"> Upload File</i></h2>-->
     <?php

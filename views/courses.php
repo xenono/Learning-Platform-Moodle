@@ -10,7 +10,7 @@ $lectureResources = [];
 if (isset($_GET["courseId"]) && isset($_GET["lecture"])) {
     $courseId = $_GET["courseId"];
     $currentLecture = $_GET["lecture"];
-    $courseInfo = getCourseName($conn,$courseId);
+    $courseInfo = getCourseInfo($conn,$courseId);
     $currentCourse = $courseInfo->courseName;
     $lectures = getAllLectures($conn,$courseId);
     $lectureResources = getLectureResources($conn, $lectures[$currentLecture - 1]->lectureId);
