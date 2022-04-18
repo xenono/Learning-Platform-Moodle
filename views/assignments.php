@@ -1,5 +1,5 @@
 <?php
-include "../components/header.php";
+include ("../includes/header.php");
 
 $core1_assignments = array(
 	$se_assignment1 = array('Software Engineering', 'Portfolio 1', '12th November 2022'),
@@ -35,7 +35,6 @@ $core2_quizzes = array('Web Dev Quiz 1', 'Web Dev Quiz 2', 'Networks Quiz 1','Ne
 					</li>
 				<?php } ?>
 			</ul>
-
 			<ul class = "core1-assignment-titles">
 				<h2>Assignment Title</h2>
 				<?php foreach($core1_assignments as $assignment){?>
@@ -151,6 +150,6 @@ $core2_quizzes = array('Web Dev Quiz 1', 'Web Dev Quiz 2', 'Networks Quiz 1','Ne
 	</div>
 </div>
 <?php
-include "../components/footer.php";
+include ("../includes/footer.php");
 ?>
 
