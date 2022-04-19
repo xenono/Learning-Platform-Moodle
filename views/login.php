@@ -1,5 +1,4 @@
 <?php
-include $_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/includes/auth.php";
 include ("../config/Connection.php");
 include ("../includes/header.php");
 $isError = false;

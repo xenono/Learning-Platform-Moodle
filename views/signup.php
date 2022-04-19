@@ -1,5 +1,5 @@
 <?php
-include $_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/includes/header.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
 
 require_once "../config/Connection.php";
 

@@ -152,19 +152,15 @@ CREATE TABLE `tutor` (
 --
 
 CREATE TABLE `user` (
-  `assignmentId` int NOT NULL,
-  `fileId` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `assignmentresource`
---
-
-CREATE TABLE `assignmentresource` (
-  `assignmentId` int NOT NULL,
-  `fileId` int NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `surname` varchar(20) NOT NULL,
+  `phoneNumber` varchar(11) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(15) NOT NULL,
+  `address` varchar(60) NOT NULL,
+  `dateOfBirth` date NOT NULL,
+  `userType` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -186,13 +182,6 @@ INSERT INTO `user` (`id`, `name`, `surname`, `phoneNumber`, `email`, `password`,
 ALTER TABLE `assignment`
   ADD PRIMARY KEY (`assignmentId`),
   ADD KEY `courseId` (`courseId`);
-
---
--- Indexes for table `assignmentresources`
---
-ALTER TABLE `assignmentresources`
-  ADD KEY `assignmentId` (`assignmentId`),
-  ADD KEY `fileId` (`fileId`);
 
 --
 -- Indexes for table `assignmentgrade`
@@ -303,13 +292,6 @@ ALTER TABLE `user`
 --
 ALTER TABLE `assignment`
   ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`);
-
---
--- Constraints for table `assignmentresources`
---
-ALTER TABLE `assignmentresources`
-  ADD CONSTRAINT `assignmentresources_ibfk_1` FOREIGN KEY (`assignmentId`) REFERENCES `assignment` (`assignmentId`),
-  ADD CONSTRAINT `assignmentresources_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `file` (`fileId`);
 
 --
 -- Constraints for table `assignmentgrade`
