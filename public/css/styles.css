@@ -83,12 +83,16 @@ p {
     font-size: 1.25rem;
 }
 input {
-    width: 100%;
+    width: 75%;
     margin-bottom: 15px;
     font-size: 1.25rem;
     padding: 5px 10px;
     border: 0.5px solid gray;
     outline: none;
+    margin-right: 15px;
+}
+form {
+    display: flex;
 }
 textarea {
     width: 100%;
@@ -274,15 +278,17 @@ footer div p {
 
 .assignments-course-item {
     list-style: none;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-titles {
     grid-column-start: 2;
-    text-align: center;
 }
 
 .assignments-assignment-titles-item {
     list-style: none;
+    text-align: center;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-dates {
@@ -295,14 +301,28 @@ footer div p {
 
 .assignments-assignment-resources-item {
     list-style: none;
+    text-align: center;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-file-upload {
     grid-column-start: 5;
+    text-align: center;
+}
+
+.assignments-assignment-file-upload-item {
+    list-style: none;
+    text-align: center;
+    place-items: center;
+    border:  1px solid transparent;
+    margin-top: 15px;
+
 }
 
 .assignments-assignment-dates-item {
     list-style: none;
+    text-align: center;
+    border:  1px solid transparent;
 }
 
 .assignments {

@@ -43,6 +43,7 @@ CREATE TABLE `assignment` (
 CREATE TABLE `assignmentgrade` (
   `assignmentId` int NOT NULL,
   `fileId` int NOT NULL,
+  `userId` int NOT NULL,
   `grade` char(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -163,6 +164,18 @@ CREATE TABLE `user` (
   `userType` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assignmentresource`
+--
+
+CREATE TABLE `assignmentresource` (
+  `assignmentId` int NOT NULL,
+  `fileId` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 --
 -- Dumping data for table `user`
 --
@@ -184,11 +197,19 @@ ALTER TABLE `assignment`
   ADD KEY `courseId` (`courseId`);
 
 --
+-- Indexes for table `assignmentresource`
+--
+ALTER TABLE `assignmentresource`
+  ADD KEY `assignmentId` (`assignmentId`),
+  ADD KEY `fileId` (`fileId`);
+
+--
 -- Indexes for table `assignmentgrade`
 --
 ALTER TABLE `assignmentgrade`
   ADD KEY `assignmentId` (`assignmentId`),
-  ADD KEY `fileId` (`fileId`);
+  ADD KEY `fileId` (`fileId`),
+  ADD KEY `userId` (`userId`);
 
 --
 -- Indexes for table `course`
@@ -294,11 +315,19 @@ ALTER TABLE `assignment`
   ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`);
 
 --
+-- Constraints for table `assignmentresource`
+--
+ALTER TABLE `assignmentresource`
+  ADD CONSTRAINT `assignmentresource_ibfk_1` FOREIGN KEY (`assignmentId`) REFERENCES `assignment` (`assignmentId`),
+  ADD CONSTRAINT `assignmentresource_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `file` (`fileId`);
+
+--
 -- Constraints for table `assignmentgrade`
 --
 ALTER TABLE `assignmentgrade`
   ADD CONSTRAINT `assignmentgrade_ibfk_1` FOREIGN KEY (`assignmentId`) REFERENCES `assignment` (`assignmentId`),
-  ADD CONSTRAINT `assignmentgrade_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `file` (`fileId`);
+  ADD CONSTRAINT `assignmentgrade_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `file` (`fileId`),
+  ADD CONSTRAINT `assignmentgrade_ibfk_3` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
 
 --
 -- Constraints for table `file`
