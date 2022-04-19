@@ -1,7 +1,6 @@
 <?php
 include ("../config/Connection.php");
 include ("../includes/header.php");
-session_start();
 $isError = false;
 global $conn;
 if(isset($_POST["student-id"]) && isset($_POST["password"])){
