@@ -267,71 +267,49 @@ footer div p {
 
 /* End of Login Form Styles */
 
-/*core 1 assignments view */
-.core1-modules-list {
+/*assignments view */
+.assignments-courses-list {
     grid-column-start: 1;
 }
 
-.core1-module-item {
+.assignments-course-item {
     list-style: none;
 }
 
-.core1-assignment-titles {
+.assignments-assignment-titles {
     grid-column-start: 2;
     text-align: center;
 }
 
-.core1-assignment-titles-item {
+.assignments-assignment-titles-item {
     list-style: none;
 }
 
-.core1-assignment-dates {
+.assignments-assignment-dates {
     grid-column-start: 3;
 }
 
-.core1-assignment-dates-item {
+.assignments-assignment-resources {
+    grid-column-start: 4;
+}
+
+.assignments-assignment-resources-item {
     list-style: none;
 }
 
-.core1-assignments {
+.assignments-assignment-file-upload {
+    grid-column-start: 5;
+}
+
+.assignments-assignment-dates-item {
+    list-style: none;
+}
+
+.assignments {
     display: grid;
     /*grid-template-columns: 3;*/
     grid-column-gap: 2%;
-    background-color: grey;
-}
-
-
-/*core 2 assignments view*/
-.core2-modules-list {
-    grid-column-start: 1;
-}
-
-.core2-module-item {
-    list-style: none;
-}
-
-.core2-assignment-titles {
-    grid-column-start: 2;
-    text-align: center;
-}
-
-.core2-assignment-titles-item {
-    list-style: none;
-}
-
-.core2-assignment-dates {
-    grid-column-start: 3;
-}
-
-.core2-assignment-dates-item {
-    list-style: none;
-}
-
-.core2-assignments {
-    display: grid;
-    /*grid-template-columns: 3;*/
-    grid-column-gap: 2%;
-    background-color: grey;
+    background: whitesmoke;
 }
 
 .assignments-grid {
@@ -342,6 +320,8 @@ footer div p {
     /*grid-template-columns: 1;*/
     /*grid-template-rows: 2;*/
 }
+
+/* quizzes */
 
 .quizzes-elements-grid {
     text-align: center;
@@ -361,35 +341,19 @@ footer div p {
     /*grid-template-rows: 1;*/
 }
 
-.core2-quizzes {
+.quizzes {
     display: grid;
     /*grid-template-columns: 2;*/
     grid-column-gap: 2%;
     grid-column-start: 2;
-    background-color: grey;
+    background-color: whitesmoke;
 }
 
-.core1-quizzes {
-    display: grid;
-    /*grid-template-columns: 2;*/
-    grid-column-gap: 2%;
-    grid-column-start: 1;
-    background-color: grey;
-}
-
-.core1-quizzes-list {
+.quizzes-list {
     margin: auto;
 }
 
-.core1-quizzes-item {
-    font-size: 1.5rem;
-}
-
-.core2-quizzes-list {
-    margin: auto;
-}
-
-.core2-quizzes-item {
+.quizzes-item {
     font-size: 1.5rem;
 }
 
