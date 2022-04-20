@@ -24,6 +24,8 @@ $courseDetailsResults = array();
 $courseDatesResults = array();
 $courseFileNames = array();
 
+$Ids = array();
+
 // Grab the names, details and dates of each assignment of the courses that are being taken by the logged in user
 if (sizeof($courseIds) > 0) {
 	for ($i = 0; $i < sizeof($courseIds); $i++) {
@@ -37,6 +39,7 @@ if (sizeof($courseIds) > 0) {
 
 		while($row = mysqli_fetch_array($files)) {
 			$courseFileIds = mysqli_query($conn, "SELECT fileId FROM assignmentresource WHERE assignmentId = $row[assignmentId]");
+			array_push($Ids, $row['assignmentId']);
 		}
 
 		while($row = mysqli_fetch_array($courseFileIds)) {
@@ -55,6 +58,7 @@ if (sizeof($courseIds) > 0) {
 	$assignmentDetails = array();
 	$assignmentDueDates = array();
 	$assignmentFileNames = array();
+	$assignmentFileIds = array();
 
 	// Push each name, detail and date for each assignment to the array variables that will be used within the html to present them to the user
 	if (sizeof($courseNamesResults) > 0) {
@@ -63,10 +67,12 @@ if (sizeof($courseIds) > 0) {
 			$details = $courseDetailsResults[$i];
 			$date = $courseDatesResults[$i];
 			$fileName = $courseFileNames[$i];
+			$id = $Ids[$i];
 			array_push($assignmentCourses, $name);
 			array_push($assignmentDetails, $details);
 			array_push($assignmentDueDates, $date);
 			array_push($assignmentFileNames, $fileName);
+			array_push($assignmentFileIds, $id);
 		}
 	}
 }
@@ -143,7 +149,80 @@ $quizzes = array('SE Quiz 1','SE Quiz 2', 'OOSD Quiz 1','OOSD Quiz 2');
 
 			<ul class ="assignments-assignment-file-upload">
 				<h2>Upload File</h2>
+				<?php foreach($assignmentFileIds as $id){?>
+					<div class = "assignments-assignment-file-upload-item">
+						<form action='<?php echo "assignments.php?fileid=" . $id[0]; ?>' method='POST' enctype='multipart/form-data'>
+							<input type="file" name="fileToUpload" id="fileToUpload">
+							<input type="submit" value="Submit" name="uploadFile">
+							<input type="submit" value="Unsubmit" name="unsubmitFile">
+						</form>
+					</div>
+				<?php } ?>
 			</ul>
+
+			<?php 
+
+			if(isset($_POST["uploadFile"]) && $_FILES["fileToUpload"]){
+				$assignmentId = $_GET["fileid"];
+
+				$fileData = $_FILES["fileToUpload"];
+		        $tmpName =$fileData["tmp_name"];
+		        $filename = $fileData["name"];
+		        $fileExists = 0;
+
+		        $noOfForbiddenChars = 0;
+
+		        // Count no. of forbidden chars in file name
+
+		        for ($i = 0; $i < strlen($filename); $i++) {
+		            if (($filename[$i] == "<") || ($filename[$i] == ">") || ($filename[$i] == "#") || ($filename[$i] == "%")) {
+		                $noOfForbiddenChars++;
+		            }
+		        }
+
+		        $checkExistingFiles = mysqli_query($conn, "SELECT fileName FROM file WHERE authorId=$_SESSION[userId]");
+		        while($row = mysqli_fetch_array($checkExistingFiles)) {
+		        	if ($row[0] == $filename) {
+		        		$fileExists = 1;
+		        	}
+		        }
+		        if ($fileExists == 0) {
+					if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/uploads/$filename")) && ($noOfForbiddenChars == 0)){
+
+						$authorId = $_SESSION["userId"];
+						$sql = "INSERT INTO file(fileName,authorId) VALUES ('$filename','$authorId');";
+			            if(!$conn->query($sql)){
+			                echo mysqli_error($conn);
+			            }
+
+			            $fileId = $conn->insert_id;
+						$sql = "INSERT INTO assignmentgrade(assignmentId,fileId, userId) VALUES ('$assignmentId','$fileId', '$authorId');";
+			            if(!$conn->query($sql)){
+			                echo mysqli_error($conn);
+			            }
+
+					} else {
+						echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
+					}
+				} else {
+					echo "You have already uploaded that file";
+				}
+
+			}
+
+			if(isset($_POST["unsubmitFile"])){
+				$assignmentId = $_GET["fileid"];
+
+				$sql = mysqli_query($conn, "SELECT fileId FROM assignmentgrade WHERE assignmentId=$assignmentId AND userId=$_SESSION[userId]");
+
+				while($row = mysqli_fetch_array($sql)) {
+					$deleteFile = mysqli_query($conn, "DELETE FROM assignmentgrade WHERE fileId=$row[0]");
+					$deleteFile2 = mysqli_query($conn, "DELETE FROM file WHERE fileId=$row[0] AND authorId=$_SESSION[userId]");
+				}
+
+			}
+
+			?>
 
 
 		</div>

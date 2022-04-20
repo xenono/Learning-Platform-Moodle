@@ -262,7 +262,7 @@ if ($courses->num_rows > 0) {
                 echo mysqli_error($conn);
             }
         } else {
-            echo "File uploading has failed. Check if the name of the file contains a '<', '>' or a '#'.";
+            echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
         }
     } ?>
 
