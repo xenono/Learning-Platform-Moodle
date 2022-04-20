@@ -203,6 +203,70 @@ if ($courses->num_rows > 0) {
         <input type="file" name="file" id="file">
         <button type="submit" value="true" name="addResourceForm">Add</button>
     </form>
+
+    <!-- Assignment file handling -->
+
+    <h1>Assignments</h1>
+    <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
+    <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
+        <label for="courseId">Choose course</label>
+        <select name="courseId" id="courseId" required>
+            <?php
+            foreach ($courses as $course) { ?>
+                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+            <?php } ?>
+        </select>
+        <label for="assignmentDetails">Assignment Details</label>
+        <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
+        <label for="assignmentDate">Assignment Due Date</label>
+        <input type="date" id="assignmentDate" name="assignmentDate" required></input>
+        <label for="file">Assignment Resource</label>
+        <input type="file" name="file" id="file">
+        <button type="submit" value="true" name="addAssignmentResource">Add</button>
+    </form>
+
+    <?php
+    if(isset($_POST["addAssignmentResource"]) && $_FILES["file"]){
+        $courseId = mysqli_escape_string($conn,$_POST["courseId"]);
+        $assignmentDetails = mysqli_escape_string($conn,$_POST["assignmentDetails"]);
+        $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
+        $fileData = $_FILES["file"];
+
+        $tmpName =$fileData["tmp_name"];
+        $filename = $fileData["name"];
+
+        $noOfForbiddenChars = 0;
+
+        // Count no. of forbidden chars in file name
+
+        for ($i = 0; $i < strlen($filename); $i++) {
+            if (($filename[$i] == "<") || ($filename[$i] == ">") || ($filename[$i] == "#") || ($filename[$i] == "%")) {
+                $noOfForbiddenChars++;
+            }
+        }
+
+        if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/uploads/$filename")) && ($noOfForbiddenChars == 0)){
+            $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
+            if(!$conn->query($sql)){
+                echo mysqli_error($conn);
+            }
+            $assignmentId = $conn->insert_id;
+            $authorId = $_SESSION["userId"];
+            $sql = "INSERT INTO file(fileName,authorId) VALUES ('$filename','$authorId');";
+            if(!$conn->query($sql)){
+                echo mysqli_error($conn);
+            }
+            $fileId = $conn->insert_id;
+            $sql = "INSERT INTO assignmentresource (assignmentId,fileId) VALUES ('$assignmentId','$fileId')";
+            if(!$conn->query($sql)){
+                echo mysqli_error($conn);
+            }
+        } else {
+            echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
+        }
+    } ?>
+
+    
   </div>
 </div>
 
