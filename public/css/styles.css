@@ -533,7 +533,9 @@ th {
     height: 5px;
     border: 1px solid #ccc;
     row-span: 1;
+    padding : 10px;
 }
+
 .admin .page-content{
     min-width: 800px;
     margin: 10px;

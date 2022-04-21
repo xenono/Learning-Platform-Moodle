@@ -41,7 +41,7 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
             ?>
             <a class="nav-item <?php if ($currentPage == "index.php") {
                 echo "nav-item-active";
-            } ?>" href="../views/index.php">Homepage </a>
+            } ?>" href="../views/index.php"> Homepage </a>
         <?php } else if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] === true) { ?>
             <a class="nav-item <?php if ($currentPage == "dashboard.php") {
                 echo "nav-item-active";

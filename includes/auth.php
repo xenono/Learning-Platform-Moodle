@@ -47,8 +47,7 @@ function authoriseStudent($conn){
         if ($conn->query($sql) === TRUE) {
 // adding the approved students to 'student' table
             $sqladd = "INSERT INTO student (studentId) VALUES ($id)";
-            $res = mysqli_query($conn,$sqladd);
-            if ($res){
+            if ($conn->query($sqladd) === TRUE){
                 echo "Student added to the student table successfully";
             }
         }
@@ -78,7 +77,8 @@ function authoriseTutor($conn){
         $userAuthorised = 1;
         $sql = "UPDATE user SET userAuthorised = $userAuthorised WHERE id = $id";
         if(($conn)->query($sql) == True){
-            $sqladd = "INSERT INTO tutor (tutor_id) VALUES ($id)";
+            // adding authorised tutor to the tutor table
+            $sqladd = "INSERT INTO tutor (tutorId) VALUES ($id)";
             if ($conn->query($sqladd) === TRUE) {
                 echo "Record updated successfully";
             } else {

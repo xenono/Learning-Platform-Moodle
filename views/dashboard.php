@@ -7,13 +7,27 @@ if(!isset($_SESSION["userId"])){
     Header("Location: login.php");
 }
 $userId = $_SESSION["userId"];
-$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
-$result = $conn->query($sql);
-echo mysqli_error($conn);
-$courses = array();
-if ($result->num_rows > 0){
-    $courses = mysqli_fetch_all($result);
+$userType = $_SESSION["userType"];
+print_r($userType);
+if ($userType == "student"){
+    $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
+    $result = $conn->query($sql);
+    echo mysqli_error($conn);
+    $courses = array();
+    if ($result->num_rows > 0){
+        $courses = mysqli_fetch_all($result);
+    }
 }
+if ($userType == 'tutor'){
+    $sql = "SELECT courseName FROM tutorcourse INNER JOIN course ON tutorcourse.courseId=course.courseId WHERE tutorId='$userId' ";
+    $result = $conn->query($sql);
+    echo mysqli_error($conn);
+    $courses = array();
+    if ($result->num_rows > 0){
+        $courses = mysqli_fetch_all($result);
+    }
+}
+
 ?>
 <?php
 if (isset($_GET["formSubmission"])) {
