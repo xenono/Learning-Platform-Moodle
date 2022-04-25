@@ -274,6 +274,7 @@ footer div p {
 /*assignments view */
 .assignments-courses-list {
     grid-column-start: 1;
+    border:  1px solid transparent;
 }
 
 .assignments-course-item {
@@ -283,6 +284,7 @@ footer div p {
 
 .assignments-assignment-titles {
     grid-column-start: 2;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-titles-item {
@@ -293,10 +295,12 @@ footer div p {
 
 .assignments-assignment-dates {
     grid-column-start: 3;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-resources {
     grid-column-start: 4;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-resources-item {
@@ -308,15 +312,16 @@ footer div p {
 .assignments-assignment-file-upload {
     grid-column-start: 5;
     text-align: center;
+    grid-template-column: max-content;
+    border:  1px solid transparent;
 }
 
 .assignments-assignment-file-upload-item {
     list-style: none;
+    display: flex;
     text-align: center;
-    place-items: center;
+    justify-content:center;
     border:  1px solid transparent;
-    margin-top: 15px;
-
 }
 
 .assignments-assignment-dates-item {
@@ -328,18 +333,21 @@ footer div p {
 .assignments {
     display: grid;
     /*grid-template-columns: 3;*/
-    grid-column-gap: 2%;
+    grid-column-gap: 0;
     background: whitesmoke;
 }
 
 .assignments-grid {
     text-align: center;
     width: 50%;
+    height: 100%;
     margin: auto;
     display: grid;
+    grid-template-rows: 1,35px;
     /*grid-template-columns: 1;*/
     /*grid-template-rows: 2;*/
 }
+
 
 /* quizzes */
 
@@ -351,21 +359,11 @@ footer div p {
     /*grid-template-rows: 2;*/
 }
 
-.quizzes-grid {
-    text-align: center;
-    width: 50%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-column-gap: 2%;
-    /*grid-template-rows: 1;*/
-}
-
 .quizzes {
     display: grid;
+    flex-direction: row;
     /*grid-template-columns: 2;*/
     grid-column-gap: 2%;
-    grid-column-start: 2;
     background-color: whitesmoke;
 }
 
@@ -375,6 +373,52 @@ footer div p {
 
 .quizzes-item {
     font-size: 1.5rem;
+}
+
+/* quizzes page */
+
+.quizzes-title {
+    text-align: center;
+    color: var(--orange);
+}
+
+.questions {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-flow: column;
+    grid-column-gap: 0;
+    background: whitesmoke;
+    margin: auto;
+    width: 50%;
+}
+
+.questions-item {
+    border:  1px solid transparent;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+#btn_submit {
+    margin: auto;
+    width: 10%;
+}
+
+.questions-item-question {
+    border:  1px solid var(--orange);
+    margin: 25px;
+}
+
+.questions-item, li {
+    list-style: none;
+
+}
+
+.questions-item, ul {
+    list-style: none;
+}
+
+ul {
+    list-style: none;
 }
 
 /* Dashboard*/
