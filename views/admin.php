@@ -268,7 +268,191 @@ if ($courses->num_rows > 0) {
         }
     } ?>
 
-    
+<!-- Grade student assignment work -->
+
+
+<h2><i class = "fa fa-university"> Grade Assignments</i></h2>
+
+<table>
+    <tr>
+        <th>Assignment</th>
+        <th>Submitted Work</th>
+        <th>Student</th>
+        <th>Grade</th>
+    </tr>
+    <?php 
+    $sql = mysqli_query($conn, "SELECT * FROM assignmentgrade;");
+    $fileNames = mysqli_query($conn, "SELECT fileName FROM file INNER JOIN assignmentgrade ON assignmentgrade.fileId=file.fileId WHERE file.fileId=assignmentgrade.fileId");
+    while($row = mysqli_fetch_array($sql)) { ?>
+        <form method = 'POST' action = '<?php echo "admin.php?fileid=" . $row['fileId']; ?>' method='POST' enctype='multipart/form-data'>
+            <tr>
+                <td> <?php echo $row['assignmentId']; ?> </td>
+                <td><?php echo "<a href='/learning-platform-moodle/uploads/" . mysqli_fetch_array($fileNames)[0] . "'/>Download file</a>";?></td>
+                <td> <?php echo $row['userId']; ?> </td>
+                <td><input type = 'text' name = 'Grade' id = 'Grade' required></td>
+                <td><input type="submit" value="Submit" name="uploadGrade"></td>
+            </tr>
+        </form>
+    <?php } 
+
+    if (isset($_POST["uploadGrade"])) {
+        $fileId = $_GET['fileid'];
+        $userId = $_SESSION['userId'];
+        $grade = mysqli_escape_string($conn,$_POST["Grade"]);
+
+        $sql = "UPDATE assignmentgrade SET grade = '$grade' WHERE fileId='$fileId'";
+        if(!$conn->query($sql)) {
+            echo mysqli_error($conn);
+        }
+    } ?>
+</table>
+
+    <h1>Quizzes</h1>
+    <h2><i class = "fa fa-file"> Add Quiz</i></h2>
+
+    <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
+        <label for="courseId">Course</label>
+        <select name="courseId" id="courseId" required>
+            <?php
+            foreach ($courses as $course) { ?>
+                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+            <?php } ?>
+        </select>
+        <label for="quizName">Quiz Name</label>
+        <input type="text" id="quizName" name="quizName" required></input>
+        <button type="submit" value="true" name="addQuiz">Add</button>
+    </form>
+
+
+    <?php
+
+    if (isset($_POST["addQuiz"])) {
+
+        $noOfForbiddenChars = 0;
+        $courseId = mysqli_escape_string($conn,$_POST["courseId"]);
+        $quizName = mysqli_escape_string($conn,$_POST["quizName"]);
+
+        for ($i = 0; $i < strlen($quizName); $i++) {
+            if (($quizName[$i] == "<") || ($quizName[$i] == ">") || ($quizName[$i] == "#") || ($quizName[$i] == "%")) {
+                $noOfForbiddenChars++;
+            }
+        }
+
+        if ($noOfForbiddenChars == 0) {
+            $sql = "INSERT INTO quiz(courseId, quizName) VALUES ('$courseId', '$quizName');";
+            if(!$conn->query($sql)) {
+                echo mysqli_error($conn);
+            }
+        } else {
+            echo "Quiz name invalid. Ensure there are no '<', '>', '#' or '%' symbols";
+        }
+    }
+
+    ?>
+
+    <h2><i class = "fa fa-upload"> Upload Quiz Questions</i></h2>
+
+    <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
+        <label for="quizId">Quiz</label>
+        <select name="quizId" id="quizId" required>
+            <?php
+            foreach ($quizzes as $quiz) { ?>
+                <option value="<?php echo $quiz[0] ?>"><?php echo $quiz[2] ?></option>
+            <?php } ?>
+        </select>
+        <label for="question">Question</label>
+        <textarea id="question" name="question" required></textarea>
+        <label for="answer1">Answer 1</label>
+        <textarea id="answer1" name="answer1" required></textarea>
+        <label for="answer2">Answer 2</label>
+        <textarea id="answer2" name="answer2" required></textarea>
+        <label for="answer3">Answer 3</label>
+        <textarea id="answer3" name="answer3"></textarea>
+        <label for="answer4">Answer 4</label>
+        <textarea id="answer4" name="answer4"></textarea>
+        <label for="correctAnswer">Correct Answer</label>
+        <select name="correctAnswer" id="correctAnswer" required>
+            <option value="answer1">Answer 1</option>
+            <option value="answer2">Answer 2</option>
+            <option value="answer3">Answer 3</option>
+            <option value="answer4">Answer 4</option>
+        </select>
+        <button type="submit" value="true" name="addQuestion">Add</button>
+
+    </form>
+
+    <?php
+
+    if (isset($_POST["addQuestion"])) {
+
+        $noOfForbiddenCharsQuestion = 0;
+        $noOfForbiddenCharsAnswer1 = 0;
+        $noOfForbiddenCharsAnswer2 = 0;
+        $noOfForbiddenCharsAnswer3 = 0;
+        $noOfForbiddenCharsAnswer4 = 0;
+        $quizId = mysqli_escape_string($conn,$_POST["quizId"]);
+        $question = mysqli_escape_string($conn,$_POST["question"]);
+        $answer1 = mysqli_escape_string($conn,$_POST["answer1"]);
+        $answer2 = mysqli_escape_string($conn,$_POST["answer2"]);
+        $answer3 = mysqli_escape_string($conn,$_POST["answer3"]);
+        $answer4 = mysqli_escape_string($conn,$_POST["answer4"]);
+        $correctAnswer = "";
+
+        if ($_POST["correctAnswer"] == "Answer 1") {
+            $correctAnswer = $answer1;
+        } else if ($_POST["correctAnswer"] == "Answer 2") {
+            $correctAnswer = $answer2;
+        } else if ($_POST["correctAnswer"] == "Answer 3") {
+            $correctAnswer = $answer3;
+        } else {
+            $correctAnswer = $answer4;
+        }
+        // Making sure questions and answers dont have forbidden chars
+
+        for ($i = 0; $i < strlen($question); $i++) {
+            if (($question[$i] == "<") || ($question[$i] == ">") || ($question[$i] == "#") || ($question[$i] == "%")) {
+                $noOfForbiddenCharsQuestion++;
+            }
+        }
+
+        for ($i = 0; $i < strlen($answer1); $i++) {
+            if (($answer1[$i] == "<") || ($answer1[$i] == ">") || ($answer1[$i] == "#") || ($answer1[$i] == "%")) {
+                $noOfForbiddenCharsQuestionAnswer1++;
+            }
+        }
+
+        for ($i = 0; $i < strlen($answer2); $i++) {
+            if (($answer2[$i] == "<") || ($answer2[$i] == ">") || ($answer2[$i] == "#") || ($answer2[$i] == "%")) {
+                $noOfForbiddenCharsQuestionAnswer2++;
+            }
+        }
+
+        for ($i = 0; $i < strlen($answer3); $i++) {
+            if (($answer3[$i] == "<") || ($answer3[$i] == ">") || ($answer3[$i] == "#") || ($answer3[$i] == "%")) {
+                $noOfForbiddenCharsQuestionAnswer3++;
+            }
+        }
+
+        for ($i = 0; $i < strlen($answer4); $i++) {
+            if (($answer4[$i] == "<") || ($answer4[$i] == ">") || ($answer4[$i] == "#") || ($answer4[$i] == "%")) {
+                $noOfForbiddenCharsQuestionAnswer4++;
+            }
+        }
+
+        if (($noOfForbiddenCharsQuestion == 0) && ($noOfForbiddenCharsAnswer1 == 0) && ($noOfForbiddenCharsAnswer2 == 0) && ($noOfForbiddenCharsAnswer3 == 0) && ($noOfForbiddenCharsAnswer4 == 0)) {
+            $sql = "INSERT INTO quizquestions (quizId, question, answer1, answer2, answer3, answer4, correctAnswer) VALUES ('$quizId', '$question', '$answer1', '$answer2', '$answer3', '$answer4', '$correctAnswer');";
+            if (!$conn->query($sql)) {
+                echo mysqli_error($conn);
+            }
+        } else {
+            echo "Ensure the question and answers do not have '<', '>', '#' or '%' in them";
+        }
+
+    }
+
+    ?>
+
+
   </div>
 </div>
 

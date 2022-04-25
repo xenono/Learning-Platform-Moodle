@@ -24,6 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `quiz`
+--
+
+CREATE TABLE `quiz` ( `quizId` INT NOT NULL AUTO_INCREMENT , `courseId` INT NOT NULL , `quizName` VARCHAR(255) NOT NULL , PRIMARY KEY (`quizId`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quizgrade`
+--
+
+CREATE TABLE `moodle`.`quizgrade` ( `quizId` INT NOT NULL , `userId` INT NOT NULL , `grade` INT NOT NULL ) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quizquestions`
+--
+
+CREATE TABLE `moodle`.`quizquestions` ( `questionId` INT NOT NULL AUTO_INCREMENT , `quizId` INT NOT NULL , `question` VARCHAR(255) NOT NULL , `answer1` VARCHAR(255) NOT NULL , `answer2` VARCHAR(255) NOT NULL , `answer3` VARCHAR(255) NOT NULL , `answer4` VARCHAR(255) NOT NULL , `correctAnswer` VARCHAR(255) NOT NULL , PRIMARY KEY (`questionId`)) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `assignment`
 --
 
@@ -197,6 +221,25 @@ ALTER TABLE `assignment`
   ADD KEY `courseId` (`courseId`);
 
 --
+-- Indexes for table `quiz`
+--
+ALTER TABLE `quiz`
+  ADD KEY `courseId` (`courseId`);
+
+--
+-- Indexes for table `quizgrade`
+--
+ALTER TABLE `quizgrade`
+  ADD KEY `quizId` (`quizId`),
+  ADD KEY `userId` (`userId`);
+
+--
+-- Indexes for table `quizquestions`
+--
+ALTER TABLE `quizquestions`
+  ADD KEY `quizId` (`quizId`);
+
+--
 -- Indexes for table `assignmentresource`
 --
 ALTER TABLE `assignmentresource`
@@ -313,6 +356,25 @@ ALTER TABLE `user`
 --
 ALTER TABLE `assignment`
   ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`);
+
+--
+-- Constraints for table `quiz`
+--
+ALTER TABLE `quiz`
+  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`);
+
+--
+-- Constraints for table `quizgrade`
+--
+ALTER TABLE `quizgrade`
+  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`quizId`) REFERENCES `quiz` (`quizId`),
+  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+
+--
+-- Constraints for table `quizquestions`
+--
+ALTER TABLE `quizquestions`
+  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`quizId`) REFERENCES `quiz` (`quizId`);
 
 --
 -- Constraints for table `assignmentresource`
