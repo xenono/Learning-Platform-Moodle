@@ -37,8 +37,8 @@ if ($courses->num_rows > 0) {
                         <td><?php echo $row->id ?> </td>
                         <td><?php echo $row->name ?></td>
                         <td><?php echo $row->surname ?></td>
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
+                        <td><input type='submit' name='authoriseStudent' value='Authorise'</td>
+                        <td><input type='submit' name='rejectStudent' value='Reject'</td>
                     </tr>
                 </table>
                 <input type='hidden' name='userAuthorised' value='<?php echo $row->userAuthorised ?>'/>
@@ -99,8 +99,8 @@ if ($courses->num_rows > 0) {
                               <td><?php echo $row -> email?></td>
                               <td><?php echo $row -> address?></td>
                               <td><?php echo $row -> dateOfBirth?></td>
-                              <td><input type='submit' name = 'authorise' value = 'Authorise'</td>
-                              <td><input type='submit' name = 'reject' value = 'Reject'</td>
+                              <td><input type='submit' name = 'authoriseTutor' value = 'Authorise'</td>
+                              <td><input type='submit' name = 'rejectTutor' value = 'Reject'</td>
                           </tr></table>
                       <input type = 'hidden' name = 'userAuthorised' value = '<?php echo $row->userAuthorised ?>'/>
                       <input type = 'hidden' name = 'id' value = '<?php echo $row->id ?>'/>

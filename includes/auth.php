@@ -1,10 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if(!isset($_SESSION["userId"]) || !isset($_SESSION["isLoggedIn"]) || !isset($_SESSION["name"])){
-    header('Location: ../views/login.php');
-}
+//if (session_status() === PHP_SESSION_NONE) {
+  //  session_start();
+//}
+//if(!isset($_SESSION["userId"]) || !isset($_SESSION["isLoggedIn"]) || !isset($_SESSION["name"])){
+  //  header('Location: ../views/login.php');
+//}
 
 // to authorise the enrollment
 function authoriseEnrollmentCourse($conn){
@@ -39,7 +39,7 @@ function rejectEnrollmentCourse($conn){
 }
 
 function authoriseStudent($conn){
-    if (isset($_POST['authorise']) && $_POST['id']){
+    if (isset($_POST['authoriseStudent']) && $_POST['id']){
         $id = mysqli_escape_string($conn,$_POST['id']);
         $userAuthorised = mysqli_escape_string($conn,$_POST['userAuthorised']);
         $userAuthorised = 1;
@@ -55,11 +55,12 @@ function authoriseStudent($conn){
             echo "Error updating record: " . $conn->error;
         }
 
+
     }
 
 }
 function rejectStudent($conn){
-    if(isset($_POST['reject']) && $_POST['id']){
+    if(isset($_POST['rejectStudent']) && $_POST['id']){
         $id = mysqli_escape_string($conn,$_POST['id']);
         $sql = "DELETE FROM user where id = $id";
         if ($conn->query($sql) === TRUE) {
@@ -71,7 +72,7 @@ function rejectStudent($conn){
 }
 
 function authoriseTutor($conn){
-    if (isset($_POST['authorise']) && $_POST['id']){
+    if (isset($_POST['authoriseTutor']) && $_POST['id']){
         $id = mysqli_escape_string($conn,$_POST['id']);
         $userAuthorised = mysqli_escape_string($conn,$_POST['userAuthorised']);
         $userAuthorised = 1;
@@ -88,7 +89,7 @@ function authoriseTutor($conn){
     }
 }
 function rejectTutor($conn){
-    if(isset($_POST['reject']) && $_POST['id']){
+    if(isset($_POST['rejectTutor']) && $_POST['id']){
         $id = mysqli_escape_string($conn,$_POST['id']);
         $sql = "DELETE FROM user where id = $id";
         if ($conn->query($sql) === TRUE) {

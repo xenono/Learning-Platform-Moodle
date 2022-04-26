@@ -3,28 +3,29 @@ include("../includes/header.php");
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include("../config/Connection.php");
 global $conn;
+global $totalFee;
 if(!isset($_SESSION["userId"])){
     Header("Location: login.php");
 }
 $userId = $_SESSION["userId"];
 $userType = $_SESSION["userType"];
-print_r($userType);
+
 if ($userType == "student"){
-    $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
+    $totalFee = 0;
+    $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' AND courseApproved = 1 ";
     $result = $conn->query($sql);
     echo mysqli_error($conn);
     $courses = array();
     if ($result->num_rows > 0){
         $courses = mysqli_fetch_all($result);
     }
-}
-if ($userType == 'tutor'){
-    $sql = "SELECT courseName FROM tutorcourse INNER JOIN course ON tutorcourse.courseId=course.courseId WHERE tutorId='$userId' ";
-    $result = $conn->query($sql);
+
+    $sqlfee = "SELECT courseFee from studentcourse INNER JOIN course on studentcourse.courseId = course.courseId where studentID = '$userId' AND courseApproved = 1 ";
+    $resultFee = $conn->query($sqlfee);
     echo mysqli_error($conn);
-    $courses = array();
+    $courseFee = array();
     if ($result->num_rows > 0){
-        $courses = mysqli_fetch_all($result);
+        $courseFee = mysqli_fetch_all($resultFee);
     }
 }
 
@@ -43,14 +44,35 @@ if (isset($_GET["formSubmission"])) {
 <div>
 </div>
 <div>
-    <?php if (count($courses) > 0) {
+
+    <?php
+    // only if a student logged in the courses and courseFee pops up.
+    if ($userType == "student"){
+    if (count($courses) > 0) {
         echo "<p>Your courses</p>";
         foreach ($courses as $course) {
             echo "<p>" . $course[0] . "</p>";
         }
     } else { ?>
         <p>No courses</p>
-    <?php } ?>
+    <?php }
+    if (count($courseFee) > 0){
+        foreach($courseFee as $fee){
+            $totalFee = $totalFee + $fee[0];
+    }
+    echo "<p> Total fee : £".$totalFee."</p>";
+    $sql = "UPDATE student set fees =$totalFee  where studentId = $userId ";
+    $result = mysqli_query($conn,$sql);
+    if ($result === False){
+        echo "<p>Something went wrong.</p>";
+    }
+    }else { ?>
+        <p> No fee to pay</p>
+    <?php }
+    }else{
+        echo "<br>";
+    }
+    ?>
     <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
 
 </div>
@@ -86,7 +108,7 @@ if (isset($_GET["formSubmission"])) {
         </div>
     </div>
     <div class="navigation-box">
-        <h2>Welcome</h2>
+        <h2>Welcome <?php echo $_SESSION["name"]; ?></h2>
 
         <div class="box">
             <div class="icon">
@@ -96,16 +118,7 @@ if (isset($_GET["formSubmission"])) {
                 <a href="">About Ace training</a>
             </div>
         </div>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-bell" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Notification</a>
-            </div>
-        </div>
-    </div>
-    <div class="navigation-box">
+
         <div class="box">
             <div class="icon">
                 <i class="fa fa-university" aria-hidden="true"></i>
@@ -114,9 +127,6 @@ if (isset($_GET["formSubmission"])) {
                 <a href="">University faculty</a>
             </div>
         </div>
-
-    </div>
-
 </div>
 
 <?php
