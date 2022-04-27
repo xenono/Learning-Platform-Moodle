@@ -1,6 +1,8 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
 //print_r($_SESSION);

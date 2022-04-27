@@ -10,22 +10,14 @@ if(!isset($_SESSION["userId"])){
 $userId = $_SESSION["userId"];
 $userType = $_SESSION["userType"];
 
-if ($userType == "student"){
+if ($userType == "student") {
     $totalFee = 0;
     $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' AND courseApproved = 1 ";
     $result = $conn->query($sql);
     echo mysqli_error($conn);
     $courses = array();
-    if ($result->num_rows > 0){
+    if ($result->num_rows > 0) {
         $courses = mysqli_fetch_all($result);
-    }
-
-    $sqlfee = "SELECT courseFee from studentcourse INNER JOIN course on studentcourse.courseId = course.courseId where studentID = '$userId' AND courseApproved = 1 ";
-    $resultFee = $conn->query($sqlfee);
-    echo mysqli_error($conn);
-    $courseFee = array();
-    if ($result->num_rows > 0){
-        $courseFee = mysqli_fetch_all($resultFee);
     }
 }
 
@@ -56,21 +48,6 @@ if (isset($_GET["formSubmission"])) {
     } else { ?>
         <p>No courses</p>
     <?php }
-    if (count($courseFee) > 0){
-        foreach($courseFee as $fee){
-            $totalFee = $totalFee + $fee[0];
-    }
-    echo "<p> Total fee : £".$totalFee."</p>";
-    $sql = "UPDATE student set fees =$totalFee  where studentId = $userId ";
-    $result = mysqli_query($conn,$sql);
-    if ($result === False){
-        echo "<p>Something went wrong.</p>";
-    }
-    }else { ?>
-        <p> No fee to pay</p>
-    <?php }
-    }else{
-        echo "<br>";
     }
     ?>
     <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
