@@ -1,6 +1,8 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
 //print_r($_SESSION);
@@ -37,8 +39,8 @@ if ($courses->num_rows > 0) {
                         <td><?php echo $row->id ?> </td>
                         <td><?php echo $row->name ?></td>
                         <td><?php echo $row->surname ?></td>
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
+                        <td><input type='submit' name='authoriseStudent' value='Authorise'</td>
+                        <td><input type='submit' name='rejectStudent' value='Reject'</td>
                     </tr>
                 </table>
                 <input type='hidden' name='userAuthorised' value='<?php echo $row->userAuthorised ?>'/>
@@ -82,12 +84,12 @@ if ($courses->num_rows > 0) {
 
     </div>
       <div class="page-content">
-          <h2><i class="fa fa-university"> Tutors Enrollment </i> </h2>
+          <h2><i class="fa fa-university"> Tutors Application </i> </h2>
               <?php
               $sql = "SELECT * FROM user WHERE userType = 'tutor' AND userAuthorised = 0";
               $result = mysqli_query($conn, $sql);
               authoriseTutor($conn);
-              //rejectTutor($conn);
+              rejectTutor($conn);
               if($result->num_rows > 0) {
               while($row = $result->fetch_object()){?>
                   <form method ='post' action = 'admin.php'>
@@ -99,8 +101,8 @@ if ($courses->num_rows > 0) {
                               <td><?php echo $row -> email?></td>
                               <td><?php echo $row -> address?></td>
                               <td><?php echo $row -> dateOfBirth?></td>
-                              <td><input type='submit' name = 'authorise' value = 'Authorise'</td>
-                              <td><input type='submit' name = 'reject' value = 'Reject'</td>
+                              <td><input type='submit' name = 'authoriseTutor' value = 'Authorise'</td>
+                              <td><input type='submit' name = 'rejectTutor' value = 'Reject'</td>
                           </tr></table>
                       <input type = 'hidden' name = 'userAuthorised' value = '<?php echo $row->userAuthorised ?>'/>
                       <input type = 'hidden' name = 'id' value = '<?php echo $row->id ?>'/>
@@ -108,12 +110,14 @@ if ($courses->num_rows > 0) {
 
                   <?php
               } } else {
-                  echo "<h1 style='color:black;'>No tutors to authorise</h1>";
+                  echo "<h3 style='color:black;'>No tutors to authorise</h3>";
               }
               ?>
           </div>
+
     <div class="page-content">
         <table>
+            <h2><i class="fa fa-info-circle"> Information </i> </h2>
             <tr>
                 <th>Course name</th>
                 <th>Course Tutor</th>
@@ -195,7 +199,8 @@ if ($courses->num_rows > 0) {
             <?php
             foreach ($courses as $course) { ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
+            <?php }
+            ?>
         </select>
         <label for="lectureNumber">Lecture Number</label>
         <input id="lectureNumber" name="lectureNumber" required type="number">
@@ -205,7 +210,6 @@ if ($courses->num_rows > 0) {
     </form>
 
     <!-- Assignment file handling -->
-
     <h1>Assignments</h1>
     <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
     <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
