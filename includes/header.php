@@ -4,6 +4,7 @@ $currentPage = end($currentPage);
 session_start();
 include $_SERVER["DOCUMENT_ROOT"] . "/scripts/courses.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
+require_once "../scripts/courses.php";
 global $conn;
 ?>
 <!doctype html>
@@ -46,9 +47,6 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
             <a class="nav-item <?php if ($currentPage == "dashboard.php") {
                 echo "nav-item-active";
             } ?>" href="../views/dashboard.php">Dashboard</a>
-            <a class="nav-item <?php if ($currentPage == "index.php") {
-                echo "nav-item-active";
-            } ?>" href="../views/index.php">Home Page</a>
             <a class="nav-item <?php if ($currentPage == "admin.php") {
                 echo "nav-item-active";
             } ?>" href="../views/admin.php">Admin</a>
@@ -59,7 +57,7 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
                 <div class="nav-item-course-dropdown" id="course-dropdown-list">
                     <?php
                     if (isset($courses)) {
-                        foreach (array_keys($courses) as $courseId) { ?>
+                        foreach (array_keys($courses) as $courseId) {?>
                             <a class="nav-item"
                                href="../views/courses.php?courseId=<?php echo $courseId ?>&lecture=1"><?php echo $courses[$courseId] ?></a>
                         <?php }

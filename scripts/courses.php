@@ -45,4 +45,9 @@ function getCourseInfo($conn, $courseId): object
     return $res->fetch_object();
 }
 
+function deleteResource($conn, $fileId){
+    $sql = "DELETE FROM file WHERE fileId=$fileId";
+    $sqlLectureResource = "DELETE FROM lectureresource WHERE fileId=$fileId";
+}
+
 ?>
