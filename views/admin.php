@@ -162,53 +162,6 @@ if ($courses->num_rows > 0) {
             <button type="submit" value="true" name="addCourseForm">Add</button>
         </form>
      </div>
-    <div class = "page-content">
-    <h1>Add files to lecture</h1>
-    <!--    <h2><i class = "fa fa-upload"> Upload File</i></h2>-->
-    <?php
-    if (isset($_POST["addResourceForm"]) && $_FILES["file"]) {
-        $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
-        $lectureDescription = mysqli_escape_string($conn, $_POST["lectureDescription"]);
-        $fileData = $_FILES["file"];
-
-        $tmpName = $fileData["tmp_name"];
-        $filename = $fileData["name"];
-        if (move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) {
-            $sql = "INSERT INTO lecture(courseId,lectureDescription) VALUES ('$courseId','$lectureDescription');";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-            $lectureId = $conn->insert_id;
-            $authorId = $_SESSION["userId"];
-            $sql = "INSERT INTO file(fileName,authorId) VALUES ('$tmpName','$authorId');";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-            $fileId = $conn->insert_id;
-            $sql = "INSERT INTO lectureresource (lectureId,fileId) VALUES ('$lectureId','$fileId')";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-        } else {
-            echo "File uploading has failed.";
-        }
-    } ?>
-    <form action="admin.php" method="POST" class="flex-form" enctype="multipart/form-data" style="margin-bottom: 50px;">
-        <label for="courseId">Choose course</label>
-        <select name="courseId" id="courseId" required>
-            <?php
-            foreach ($courses as $course) { ?>
-                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php }
-            ?>
-        </select>
-        <label for="lectureNumber">Lecture Number</label>
-        <input id="lectureNumber" name="lectureNumber" required type="number">
-        <label for="file">Lecture Resource</label>
-        <input type="file" name="file" id="file">
-        <button type="submit" value="true" name="addResourceForm">Add</button>
-    </form>
-
     <!-- Assignment file handling -->
     <h1>Assignments</h1>
     <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>

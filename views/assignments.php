@@ -1,6 +1,6 @@
 <?php
 include ("../includes/header.php");
-include $_SERVER["DOCUMENT_ROOT"] . "includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include("../config/Connection.php");
 
 global $conn;
