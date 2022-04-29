@@ -10,15 +10,9 @@ if(!isset($_SESSION["userId"])){
 $userId = $_SESSION["userId"];
 $userType = $_SESSION["userType"];
 
-if ($userType == "student") {
+if ($userType == "student" || $userType == "admin") {
     $totalFee = 0;
-    $sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' AND courseApproved = 1 ";
-    $result = $conn->query($sql);
-    echo mysqli_error($conn);
-    $courses = array();
-    if ($result->num_rows > 0) {
-        $courses = mysqli_fetch_all($result);
-    }
+    $courses = getUserCourses($conn, $_SESSION["userId"]);
 }
 
 ?>
@@ -35,15 +29,15 @@ if (isset($_GET["formSubmission"])) {
 ?>
 <div>
 </div>
-<div>
+<div style="margin-top: 50px;">
 
     <?php
     // only if a student logged in the courses and courseFee pops up.
-    if ($userType == "student"){
-    if (count($courses) > 0) {
+    if ($userType == "student" || $userType == "admin"){
+    if (isset($courses) && count($courses) > 0) {
         echo "<p>Your courses</p>";
         foreach ($courses as $course) {
-            echo "<p>" . $course[0] . "</p>";
+            echo "<p>" . $course . "</p>";
         }
     } else { ?>
         <p>No courses</p>

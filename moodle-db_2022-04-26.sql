@@ -59,7 +59,7 @@ CREATE TABLE `course` (
   `courseProgramme` varchar(100) NOT NULL,
   `courseFee` double DEFAULT NULL,
   `courseSalary` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `course`
@@ -148,7 +148,7 @@ CREATE TABLE `student` (
   `studentId` int NOT NULL,
   `fees` int DEFAULT NULL,
   `personalTutorId` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `student`
@@ -168,7 +168,7 @@ CREATE TABLE `studentcourse` (
   `studentId` int NOT NULL,
   `courseId` int NOT NULL,
   `courseApproved` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `studentcourse`
@@ -187,11 +187,10 @@ INSERT INTO `studentcourse` (`studentCourseId`, `studentId`, `courseId`, `course
 
 CREATE TABLE `tutor` (
   `tutorId` int NOT NULL,
-  `department` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `department` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `salary` int DEFAULT NULL,
-  `contractType` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+  `contractType` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 --
 -- Dumping data for table `tutor`
 --
@@ -229,7 +228,7 @@ CREATE TABLE `user` (
   `dateOfBirth` date NOT NULL,
   `userType` varchar(20) NOT NULL DEFAULT 'student',
   `userAuthorised` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
