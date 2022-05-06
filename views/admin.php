@@ -55,6 +55,7 @@ if ($courses->num_rows > 0) {
     <div class="page-content">
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of students onto applied courses </i></h2>
         <?php
+
         $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
         $result = mysqli_query($conn, $sql);
         authoriseEnrollmentCourse($conn);
@@ -114,6 +115,47 @@ if ($courses->num_rows > 0) {
               }
               ?>
           </div>
+    <div class="page-content">
+        <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
+
+        <?php
+
+        $sql = "SELECT tutor.tutorId ,user.name,user.surname, tutor.contractType  FROM tutor  INNER JOIN user ON tutor.tutorId = user.id  ";
+        $result = mysqli_query($conn, $sql);
+        enrollTutor($conn);
+        while ($row = $result->fetch_object()) {
+            ?>
+            <form method='post' action='admin.php'>
+                <table style="padding: 10px; column-gap: 10px; row-gap: 10px">
+                    <tr>
+                        <td><?php echo $row->tutorId ?> </td>
+                        <td><?php echo $row->name ?></td>
+                        <td><?php echo $row->surname ?></td>
+                        <td>
+                            <select name="courseEnroll" id="courseEnroll" required>
+                                <?php
+                                foreach ($courses as $course) { ?>
+                                    <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                                <?php } ?>
+                            </select>
+                        </td>
+                        <td>
+                            <select name = "contract" id = "contract" required>
+                               <option value = "fullTime">Full-Time</option>
+                                <option value="partTime">Part-Time</option>
+
+                            </select>
+                        </td>
+                        <td><input type='submit' name='enrollTutor' value='Enroll'</td>
+                    </tr>
+                </table>
+                <input type='hidden' name='tutorId' value='<?php echo $row->tutorId ?>'/>
+                <input type='hidden' name='tutorName' value='<?php echo $row->name ?>'/>
+
+            </form>
+            <?php
+        }
+        ?>
 
     <div class="page-content">
         <table>
@@ -176,7 +218,7 @@ if ($courses->num_rows > 0) {
         <label for="assignmentDetails">Assignment Details</label>
         <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
         <label for="assignmentDate">Assignment Due Date</label>
-        <input type="date" id="assignmentDate" name="assignmentDate" required></input>
+        <input type="date" id="assignmentDate" name="assignmentDate" required> </input>
         <label for="file">Assignment Resource</label>
         <input type="file" name="file" id="file">
         <button type="submit" value="true" name="addAssignmentResource">Add</button>
