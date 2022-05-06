@@ -30,17 +30,17 @@ function rejectTutor($conn){
 
 function enrollTutor($conn){
     if (isset($_POST['enrollTutor']) && $_POST['courseEnroll']) {
+        $name = mysqli_escape_string($conn, $_POST['tutorName']);
         $courseId = mysqli_escape_string($conn, $_POST['courseEnroll']);
         $tutorId = mysqli_escape_string($conn, $_POST['tutorId']);
         $contractType = $_POST['contract'];
         print_r($contractType);
-
         // enrolling each tutor to courses by the admin; many-to-many relationship
         $check = "SELECT * FROM tutorcourse where tutorId  = $tutorId && courseId = $courseId";
         $res = $conn ->query($check);
         $sql = mysqli_fetch_array($res , MYSQLI_NUM);
         if($sql > 1){
-            echo "You have assigned this person, for this course!";
+            echo "<p>You have assigned ".$name.", for this course!</p>";
         }
         else {
             $sql = "INSERT INTO tutorcourse (tutorId,courseId) VALUES ('$tutorId','$courseId')";

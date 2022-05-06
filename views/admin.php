@@ -19,6 +19,7 @@ $courses = $conn->query($sql);
 if ($courses->num_rows > 0) {
     $courses = mysqli_fetch_all($courses);
 }
+$sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
 ?>
 
 <div class="admin">
@@ -119,7 +120,6 @@ if ($courses->num_rows > 0) {
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
 
         <?php
-
         $sql = "SELECT tutor.tutorId ,user.name,user.surname, tutor.contractType  FROM tutor  INNER JOIN user ON tutor.tutorId = user.id  ";
         $result = mysqli_query($conn, $sql);
         enrollTutor($conn);
@@ -141,8 +141,8 @@ if ($courses->num_rows > 0) {
                         </td>
                         <td>
                             <select name = "contract" id = "contract" required>
-                               <option value = "fullTime">Full-Time</option>
-                                <option value="partTime">Part-Time</option>
+                               <option value = "FT">Full-Time</option>
+                                <option value= "PT">Part-Time</option>
 
                             </select>
                         </td>
@@ -150,7 +150,7 @@ if ($courses->num_rows > 0) {
                     </tr>
                 </table>
                 <input type='hidden' name='tutorId' value='<?php echo $row->tutorId ?>'/>
-                <input type='hidden' name='tutorName' value='<?php echo $row->name ?>'/>
+                <input type='hidden' name='tutorName' value='<?php echo $row->surname ?>'/>
 
             </form>
             <?php
@@ -160,6 +160,7 @@ if ($courses->num_rows > 0) {
     <div class="page-content">
         <table>
             <h2><i class="fa fa-info-circle"> Information </i> </h2>
+            <h3>Tutors</h3>
             <tr>
                 <th>Course name</th>
                 <th>Course Tutor</th>
@@ -179,6 +180,15 @@ if ($courses->num_rows > 0) {
 
             <?php } ?>
         </table>
+        <table>
+            <h3>Students</h3>
+             <tr>
+                 <th>Name</th>
+                 <th>Surname</th>
+                 <th>Course Name</th>
+             </tr>
+        </table>
+
     </div>
      <div class="page-content">
          <h2><i class="fa fa-file"> Add Course </i></h2>
