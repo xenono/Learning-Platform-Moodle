@@ -5,35 +5,54 @@ include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
-//print_r($_SESSION);
 
 if (isset($_SESSION["userType"]) && $_SESSION["userType"] === "student") {
     echo "<div class = 'error-box'>
          <p> Unauthorised Access!</p>
-         </div>;";
+         </div>";
     die();
 }
+// gets the courses done by the logged tutor
+if ($_SESSION["userType"] === "tutor"){
+    $userId = $_SESSION["userId"];
+    $userType = $_SESSION["userType"];
 
+     $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
+     $res = $conn->query($sql);
+     if($res){
+         $res = mysqli_fetch_all($res);
+         foreach($res as $result){
+             echo $result[0];
+             echo $result[1];
+         }
+         }
+     }
 $sql = "SELECT * from course";
 $courses = $conn->query($sql);
 if ($courses->num_rows > 0) {
     $courses = mysqli_fetch_all($courses);
 }
-$sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
+
+
+
 ?>
-
 <div class="admin">
-    <h1> Admin Page </h1>
 
+    <h1> Admin Page </h1>
     <div class="page-content">
+
+        <?php
+        //only admin can view and authorise students
+        if ($_SESSION["userType"] === "admin"){ ?>
         <h2><i class="fa fa-id-badge" aria-hidden="true"> Student Applications</i></h2>
         <?php
+
         $sql = "SELECT * FROM user WHERE userType = 'student' AND userAuthorised = 0";
         $result = mysqli_query($conn, $sql);
         authoriseStudent($conn);
         rejectStudent($conn);
         while ($row = $result->fetch_object()) {
-            ; ?>
+             ?>
             <form method='post' action='admin.php'>
                 <table>
                     <tr>
@@ -48,21 +67,23 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
                 <input type='hidden' name='id' value='<?php echo $row->id ?>'/>
 
             </form>
-
             <?php
+        }
         }
         ?>
     </div>
     <div class="page-content">
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of students onto applied courses </i></h2>
         <?php
-
+        {
         $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
         $result = mysqli_query($conn, $sql);
         authoriseEnrollmentCourse($conn);
         rejectEnrollmentCourse($conn);
+
         while ($row = $result->fetch_object()) {
             ?>
+
             <form method='post' action='admin.php'>
                 <table>
                     <tr>
@@ -78,15 +99,32 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
                 <input type='hidden' name='courseApproved' value='<?php echo $row->courseApproved ?>'/>
                 <input type='hidden' name='course' value='<?php echo $row->courseId ?>'/>
                 <input type='hidden' name='student' value='<?php echo $row->studentId ?>'/>
+
             </form>
 
             <?php
         }
+        }
+
         ?>
 
     </div>
       <div class="page-content">
+
+          <?php
+          //only admin can view and authorise students
+          if ($_SESSION["userType"] === "admin"){ ?>
+          <table>
           <h2><i class="fa fa-university"> Tutors Application </i> </h2>
+              <tr>
+                  <th>Tutor ID number</th>
+                  <th>Name</th>
+                  <th>Surname</th>
+                  <th>Contact details</th>
+                  <th>e-mail Address</th>
+                  <th>Place of residence</th>
+                  <th>Date of birth</th>
+              </tr>
               <?php
               $sql = "SELECT * FROM user WHERE userType = 'tutor' AND userAuthorised = 0";
               $result = mysqli_query($conn, $sql);
@@ -95,7 +133,7 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
               if($result->num_rows > 0) {
               while($row = $result->fetch_object()){?>
                   <form method ='post' action = 'admin.php'>
-                      <table>
+
                           <tr><td><?php echo $row->id ?> </td>
                               <td><?php echo $row->name ?></td>
                               <td><?php echo $row -> surname?></td>
@@ -115,18 +153,33 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
                   echo "<h3 style='color:black;'>No tutors to authorise</h3>";
               }
               ?>
+          </table><?php } ?>
           </div>
     <div class="page-content">
+
+        <?php
+        //only admin can view and authorise students
+        if ($_SESSION["userType"] === "admin"){ ?>
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
 
         <?php
         $sql = "SELECT tutor.tutorId ,user.name,user.surname, tutor.contractType  FROM tutor  INNER JOIN user ON tutor.tutorId = user.id  ";
         $result = mysqli_query($conn, $sql);
         enrollTutor($conn);
+        courseLeader($conn)?>
+        <table style="padding: 10px; column-gap: 10px; row-gap: 10px">
+            <tr>
+                <th>Tutor Id number</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Select the course</th>
+                <th>Type of contract</th>
+                <th>course Leader</th>
+                <th>Submit</th>
+            </tr><?php
         while ($row = $result->fetch_object()) {
             ?>
             <form method='post' action='admin.php'>
-                <table style="padding: 10px; column-gap: 10px; row-gap: 10px">
                     <tr>
                         <td><?php echo $row->tutorId ?> </td>
                         <td><?php echo $row->name ?></td>
@@ -145,17 +198,23 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
                                 <option value= "PT">Part-Time</option>
 
                             </select>
+
+                        </td>
+                        <td><input type='submit' name='courseLeader' value='CourseLeader'
                         </td>
                         <td><input type='submit' name='enrollTutor' value='Enroll'</td>
                     </tr>
-                </table>
+
                 <input type='hidden' name='tutorId' value='<?php echo $row->tutorId ?>'/>
-                <input type='hidden' name='tutorName' value='<?php echo $row->surname ?>'/>
+                <input type='hidden' name='tutorName' value='<?php echo $row->name ?>'/>
+                <input type='hidden' name='tutorSurname' value='<?php echo $row->surname ?>'/>
 
             </form>
+
             <?php
         }
-        ?>
+            }
+        ?> </table>
 
     <div class="page-content">
         <table>
@@ -169,7 +228,10 @@ $sqlstu = "SELECT user.name, user.surname, student.feeFROM student";
             <?php foreach ($courses as $course) {?>
                     <tr>
                         <td><?php echo $course[1] ?></td>
-                        <td><?php echo $course[2] ?></td>
+                        <td><?php
+                            echo $course[2];
+
+                            ?></td>
                         <td style="padding: 10px;">
                             <form action="adminEditCourse.php" method="POST" class="flex-column">
                                 <input type="text" hidden value="<?php echo $course[0] ?>" name="courseId">

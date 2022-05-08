@@ -77,3 +77,27 @@ function enrollTutor($conn){
         }
     }
 }
+// assigning teh course Leader
+function courseLeader($conn){
+    if (isset($_POST['courseLeader']) && $_POST['courseEnroll']){
+        $forename = mysqli_escape_string($conn, $_POST['tutorName']);
+        $surname = mysqli_escape_string($conn, $_POST['tutorSurname']);
+        $courseId = mysqli_escape_string($conn, $_POST['courseEnroll']);
+        $tutorId = mysqli_escape_string($conn, $_POST['tutorId']);
+        $name = $forename.$surname;
+        // checks if the tutor is already enrolled to that course
+        $check ="SELECT * FROM tutorcourse WHERE tutorId = '$tutorId' AND courseId = '$courseId' ";
+        $out = $conn->query($check);
+        $sql = mysqli_fetch_array($out , MYSQLI_NUM);
+        if($sql > 1){
+            $sql = "UPDATE course SET courseLeader = '$name' WHERE courseId = '$courseId' ";
+            if(($conn->query($sql))===True){
+                echo $name."is the course leader for the course having id ".$courseId;
+            }else{
+                echo"Error:".$conn->error;
+            }
+        }else{
+            echo "You have to enroll ".$name." to this course.".$conn->error;
+        }
+    }
+}

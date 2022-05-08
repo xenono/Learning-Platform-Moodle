@@ -12,7 +12,7 @@ function authoriseEnrollmentCourse($conn){
             // adding the total fee for the student.
             $courseFee = array();
             $totalFee = 0;
-            $sqlfee = "SELECT courseFee from studentcourse INNER JOIN course on studentcourse.courseId = course.courseId where studentID = $studentId AND courseApproved = 1 ";
+            $sqlfee = "SELECT courseFee from studentcourse INNER JOIN course on studentcourse.courseId = course.courseId where studentId = $studentId AND courseApproved = 1 ";
             $resultFee = $conn->query($sqlfee);
             echo mysqli_error($conn);
             if ($resultFee->num_rows > 0){
