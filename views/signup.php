@@ -22,20 +22,7 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
     $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth,userType)
     VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth','$userType');");
 
-    /*$conn->begin_transaction();
-    $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth)
-    VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth');");
-    $conn->query("SET @userId := LAST_INSERT_ID();");
-    $conn->query("INSERT INTO student (student_id) VALUES (@userId)");
-    $res = $conn->commit();
-    if($res) {
-        Header("Location: login.php");
-    } else {
-        echo "Fail" . "<br>";
-        echo mysqli_error($conn) . "<br>";
-        echo mysqli_errno($conn) . "<br>";
-        echo mysqli_sqlstate($conn) . "<br>";
-    }*/
+
 }
 ?>
 

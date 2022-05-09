@@ -14,7 +14,6 @@ if ($userType == "student" || $userType == "admin") {
     $totalFee = 0;
     $courses = getUserCourses($conn, $_SESSION["userId"]);
 }
-
 ?>
 <?php
 if (isset($_GET["formSubmission"])) {
@@ -59,12 +58,7 @@ if (isset($_GET["formSubmission"])) {
             <div class="tooltip">
                 <a href="">My_Courses</a>
                 <span class="tooltiptext">
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE1&week=1">Website development</a><br>
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE2&week=1">Networking</a><br>
-                    <a href="">C++</a><br>
-                    <a href="">Software Engineering</a><br>
-                    <a href="">Robotics</a><br>
-                    <a href="">AI</a>
+
                 </span>
             </div>
             <br>
