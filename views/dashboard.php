@@ -89,7 +89,7 @@ if (isset($_GET["formSubmission"])) {
                 <i class="fa fa-university" aria-hidden="true"></i>
             </div>
             <div class="content">
-                <a href="">University faculty</a>
+                <a href="../views/universityFaculty.php">University faculty</a>
             </div>
         </div>
 </div>

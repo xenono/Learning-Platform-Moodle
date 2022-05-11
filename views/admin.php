@@ -3,8 +3,12 @@ include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/restriction.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
+global $resultingTutor;
+global $courses;
+global $ans;
 
 if (isset($_SESSION["userType"]) && $_SESSION["userType"] === "student") {
     echo "<div class = 'error-box'>
@@ -17,16 +21,14 @@ if ($_SESSION["userType"] === "tutor"){
     $userId = $_SESSION["userId"];
     $userType = $_SESSION["userType"];
 
-     $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
-     $res = $conn->query($sql);
-     if($res){
-         $res = mysqli_fetch_all($res);
-         foreach($res as $result){
-             echo $result[0];
-             echo $result[1];
-         }
+ $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
+ $resultingTutor = $conn->query($sql);
+ if($resultingTutor){
+     $resultingTutor = mysqli_fetch_all($resultingTutor);
          }
      }
+
+// get the course details
 $sql = "SELECT * from course";
 $courses = $conn->query($sql);
 if ($courses->num_rows > 0) {
@@ -34,11 +36,16 @@ if ($courses->num_rows > 0) {
 }
 
 
-
 ?>
 <div class="admin">
-
+<?php if ($_SESSION["userType"] === "admin"){ ?>
     <h1> Admin Page </h1>
+    <?php
+}
+else{
+    echo "<h1> Welcome ".$_SESSION['name']. " to tutors portal</h1>";
+}
+    ?>
     <div class="page-content">
 
         <?php
@@ -73,46 +80,48 @@ if ($courses->num_rows > 0) {
         ?>
     </div>
     <div class="page-content">
+        <table>
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of students onto applied courses </i></h2>
+            <tr>
+                <th>Student Id</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Course Id number</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
         <?php
+        //both admin and tutors can view the details of students enrollment. But tutors are restricted from viewing the enrollment of students from other courses
         {
-        $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
+        $sql = "SELECT studentcourse.studentId AS studentId ,studentcourse.courseId AS courseId  ,user.name AS name ,user.surname AS surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id WHERE studentcourse.courseApproved = 0";
         $result = mysqli_query($conn, $sql);
         authoriseEnrollmentCourse($conn);
         rejectEnrollmentCourse($conn);
 
         while ($row = $result->fetch_object()) {
-            ?>
-
-            <form method='post' action='admin.php'>
-                <table>
-                    <tr>
-                        <td><?php echo $row->studentId ?> </td>
-                        <td><?php echo $row->name ?></td>
-                        <td><?php echo $row->surname ?></td>
-                        <td><?php echo $row->courseId ?></td>
-
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
-                    </tr>
-                </table>
-                <input type='hidden' name='courseApproved' value='<?php echo $row->courseApproved ?>'/>
-                <input type='hidden' name='course' value='<?php echo $row->courseId ?>'/>
-                <input type='hidden' name='student' value='<?php echo $row->studentId ?>'/>
-
-            </form>
-
-            <?php
+            // if user is a tutor, then he can enroll students on his course
+            if ($_SESSION['userType'] == 'tutor'){
+                foreach($resultingTutor as $ans){
+                    if($row->courseId ==  $ans[1]){
+                        runenrollmentStudent($conn, $row);
+                }
+            }
+            }
+            // admin can enroll all
+            else{
+                runenrollmentStudent($conn, $row);
+            }
         }
         }
 
         ?>
+        </table>
 
     </div>
       <div class="page-content">
 
           <?php
-          //only admin can view and authorise students
+          //only admin can view and authorise tutors
           if ($_SESSION["userType"] === "admin"){ ?>
           <table>
           <h2><i class="fa fa-university"> Tutors Application </i> </h2>
@@ -158,7 +167,7 @@ if ($courses->num_rows > 0) {
     <div class="page-content">
 
         <?php
-        //only admin can view and authorise students
+        //only admin can view and authorise tutors onto courses
         if ($_SESSION["userType"] === "admin"){ ?>
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
 
@@ -215,44 +224,106 @@ if ($courses->num_rows > 0) {
         }
             }
         ?> </table>
-
+    </div>
     <div class="page-content">
         <table>
-            <h2><i class="fa fa-info-circle"> Information </i> </h2>
-            <h3>Tutors</h3>
+            <h2><i class="fa fa-info-circle"> Edict the course </i> </h2>
             <tr>
+                <th>Course Number</th>
                 <th>Course name</th>
                 <th>Course Tutor</th>
                 <th>Edit course</th>
             </tr>
-            <?php foreach ($courses as $course) {?>
-                    <tr>
-                        <td><?php echo $course[1] ?></td>
-                        <td><?php
-                            echo $course[2];
+            <?php foreach ($courses as $course) {
+                if ($_SESSION['userType'] == 'tutor') {
+                    foreach ($resultingTutor as $ans) {
+                        if ($course[0] == $ans[1]) {
+                            runedictCourse($conn, $course);
+                        }
 
-                            ?></td>
-                        <td style="padding: 10px;">
-                            <form action="adminEditCourse.php" method="POST" class="flex-column">
-                                <input type="text" hidden value="<?php echo $course[0] ?>" name="courseId">
-                                <button type="submit" style="margin: 0 auto;">Edit</button>
-                            </form>
-                        </td>
-                    </tr>
+                    }
 
-            <?php } ?>
+                }
+                else{
+                    runedictCourse($conn, $course);
+                }
+            }
+            ?>
+        </table>
+    </div>
+    <div class="page-content">
+        <table>
+            <h2><i class="fa fa-info-circle"> Information </i> </h2>
+            <h3>Tutors Info</h3>
+            <tr>
+                <th>Tutor</th>
+                <th>Course </th>
+            </tr>
+            <?php
+            $sql = "SELECT user.name AS name, user.surname AS surname, user.id AS Id  FROM tutor
+                    LEFT JOIN user ON tutor.tutorId = user.id ";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+               while($row = $result->fetch_object()){?>
+                   <tr>
+                       <td><?php echo $row->name."".$row->surname ; ?></td>
+                       <td>
+                           <?php
+                           $sqlin = "SELECT course.courseName AS courseName FROM tutorcourse LEFT JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $row->Id ";
+                           $resultsqlin = mysqli_query($conn, $sqlin);
+                           if($resultsqlin) {
+                               while ($dis = $resultsqlin->fetch_object()) {
+                                   echo $dis->courseName."<br>";
+                               }
+                           }
+                           ?>
+                       </td>
+                   </tr>
+           <?php
+               }
+            }
+            ?>
         </table>
         <table>
-            <h3>Students</h3>
+            <!--  Tutors can only see students on their branch -->
+            <h3>Students Info</h3>
              <tr>
+                 <th>Student ID Number</th>
                  <th>Name</th>
                  <th>Surname</th>
                  <th>Course Name</th>
+                 <th>Financial Status</th>
              </tr>
+            <?php
+            $sql = "SELECT user.name AS name, user.surname AS surname, user.id AS Id, studentcourse.courseId AS courseId,course.courseFee AS fee, course.courseName AS courseName FROM studentcourse 
+                    LEFT JOIN user ON studentcourse.studentId = user.id    LEFT JOIN course ON studentcourse.courseId = course.courseId   LEFT JOIN student ON studentcourse.studentId = student.studentId AND user.id
+                    WHERE studentcourse.courseApproved = 1";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+            while ($row = $result->fetch_object()) {
+                if ($_SESSION['userType'] == 'tutor'){
+                    foreach($resultingTutor as $ans) {
+                        if ($row->courseId == $ans[1]) {
+                            rundisplayStudent($conn, $row);
+                        }
+                    }
+                }
+                else{
+                    rundisplayStudent($conn, $row);
+                }
+            }
+            }
+            else{
+                echo $conn->error;
+            }
+            ?>
         </table>
-
     </div>
      <div class="page-content">
+         <!--
+         only admin can add new course into the system-->
+         <?php if ($_SESSION['userType'] == 'admin'){
+         ?>
          <h2><i class="fa fa-file"> Add Course </i></h2>
         <?php
         if(isset($_POST["addCourseForm"])){
@@ -275,17 +346,33 @@ if ($courses->num_rows > 0) {
             <input type="text" name="courseLeader" id="courseLeader">
             <button type="submit" value="true" name="addCourseForm">Add</button>
         </form>
+         <?php
+         }
+         ?>
      </div>
-    <!-- Assignment file handling -->
+    <!-- Assignment file handling. Admin can access all files. But tutors are restricted to access files of their own course-->
     <h1>Assignments</h1>
     <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
     <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
         <label for="courseId">Choose course</label>
         <select name="courseId" id="courseId" required>
             <?php
-            foreach ($courses as $course) { ?>
+            foreach ($courses as $course) {
+                if($_SESSION['userType'] == 'tutor'){
+                    foreach ($resultingTutor as $ans){
+                        if ($course[0] == $ans[1]){
+                            ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
+            <?php }
+                    }
+                }
+             else {
+            ?>
+             <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+             <?php
+}
+         }
+ ?>
         </select>
         <label for="assignmentDetails">Assignment Details</label>
         <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
@@ -383,9 +470,21 @@ if ($courses->num_rows > 0) {
         <label for="courseId">Course</label>
         <select name="courseId" id="courseId" required>
             <?php
-            foreach ($courses as $course) { ?>
+            foreach ($courses as $course) {
+                if ($_SESSION['userType'] == 'tutor'){
+                    foreach ($resultingTutor as $ans){
+                        if ($course[0] == $ans[1]){
+                            ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
+            <?php }
+                    }
+                }else{
+                    ?>
+            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+            <?php
+                }
+            }
+            ?>
         </select>
         <label for="quizName">Quiz Name</label>
         <input type="text" id="quizName" name="quizName" required></input>
