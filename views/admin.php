@@ -5,6 +5,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
+global $resultingTutor;
 
 if (isset($_SESSION["userType"]) && $_SESSION["userType"] === "student") {
     echo "<div class = 'error-box'>
@@ -17,16 +18,17 @@ if ($_SESSION["userType"] === "tutor"){
     $userId = $_SESSION["userId"];
     $userType = $_SESSION["userType"];
 
-     $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
-     $res = $conn->query($sql);
-     if($res){
-         $res = mysqli_fetch_all($res);
-         foreach($res as $result){
-             echo $result[0];
-             echo $result[1];
-         }
+
+ $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
+ $resultingTutor = $conn->query($sql);
+ if($resultingTutor){
+     $resultingTutor = mysqli_fetch_all($resultingTutor);
+     foreach($resultingTutor as $ans){
+         echo "$ans[0]";
+     }
          }
      }
+// get the course details
 $sql = "SELECT * from course";
 $courses = $conn->query($sql);
 if ($courses->num_rows > 0) {
@@ -37,8 +39,14 @@ if ($courses->num_rows > 0) {
 
 ?>
 <div class="admin">
-
+<?php if ($_SESSION["userType"] === "admin"){ ?>
     <h1> Admin Page </h1>
+    <?php
+}
+else{
+    echo "<h1> Welcome ".$_SESSION['name'] .", to tutors portal</h1>";
+}
+    ?>
     <div class="page-content">
 
         <?php
@@ -73,8 +81,10 @@ if ($courses->num_rows > 0) {
         ?>
     </div>
     <div class="page-content">
+
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of students onto applied courses </i></h2>
         <?php
+        //both admin and tutors can view the details of students enrollment. But tutors are restricted from viewing the enrollment of students from other courses
         {
         $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
         $result = mysqli_query($conn, $sql);
@@ -82,6 +92,8 @@ if ($courses->num_rows > 0) {
         rejectEnrollmentCourse($conn);
 
         while ($row = $result->fetch_object()) {
+            foreach($resultingTutor as $ans){
+                if($row->courseId ==  $ans[1]){
             ?>
 
             <form method='post' action='admin.php'>
@@ -103,6 +115,8 @@ if ($courses->num_rows > 0) {
             </form>
 
             <?php
+                }
+            }
         }
         }
 
@@ -112,7 +126,7 @@ if ($courses->num_rows > 0) {
       <div class="page-content">
 
           <?php
-          //only admin can view and authorise students
+          //only admin can view and authorise tutors
           if ($_SESSION["userType"] === "admin"){ ?>
           <table>
           <h2><i class="fa fa-university"> Tutors Application </i> </h2>
@@ -158,7 +172,7 @@ if ($courses->num_rows > 0) {
     <div class="page-content">
 
         <?php
-        //only admin can view and authorise students
+        //only admin can view and authorise tutors
         if ($_SESSION["userType"] === "admin"){ ?>
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
 
@@ -219,7 +233,7 @@ if ($courses->num_rows > 0) {
     <div class="page-content">
         <table>
             <h2><i class="fa fa-info-circle"> Information </i> </h2>
-            <h3>Tutors</h3>
+            <h3 >   Tutors</h3>
             <tr>
                 <th>Course name</th>
                 <th>Course Tutor</th>
@@ -243,14 +257,40 @@ if ($courses->num_rows > 0) {
             <?php } ?>
         </table>
         <table>
-            <h3>Students</h3>
+            <h3>Students Information</h3>
              <tr>
+                 <th>Student ID Number</th>
                  <th>Name</th>
                  <th>Surname</th>
                  <th>Course Name</th>
+                 <th>Financial Status</th>
              </tr>
-        </table>
+            <?php
+            $sql = "SELECT user.name AS name, user.surname AS surname, user.id AS Id, studentcourse.courseId AS courseId,course.courseFee AS fee, course.courseName AS courseName FROM studentcourse 
+                    LEFT JOIN user ON studentcourse.studentId = user.id    LEFT JOIN course ON studentcourse.courseId = course.courseId   LEFT JOIN student ON studentcourse.studentId = student.studentId AND user.id
+                    WHERE studentcourse.courseApproved = 1";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+            while ($row = $result->fetch_object()) {
+                if($row->courseId == $ans[1]){
+                ?>
+            <tr>
+                <td><?php echo $row-> Id ;?></td>
+                <td><?php echo $row->name ;?></td>
+                <td><?php echo $row-> surname; ?></td>
+                <td><?php echo $row-> courseName ;?></td>
+                <td><?php echo $row-> fee ;?></td>
+            </tr>
+            <?php
+                }
+            }
+            }
 
+            else{
+                echo $conn->error;
+            }
+            ?>
+        </table>
     </div>
      <div class="page-content">
          <h2><i class="fa fa-file"> Add Course </i></h2>
