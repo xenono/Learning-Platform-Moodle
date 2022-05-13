@@ -1,6 +1,6 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
-
+include "../scripts/forms.php";
 require_once "../config/Connection.php";
 
 //START TRANSACTION;
@@ -10,23 +10,27 @@ require_once "../config/Connection.php";
 //INSERT INTO student (student_id,fees,personal_tutor_id) VALUES (@userId,1000,0);
 //COMMIT;
 global $conn;
-if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["name"]) && isset($_POST["phoneNumber"]) && isset($_POST["email"]) && isset($_POST["userType"])&&isset($_POST["address"])) {
+
+if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["name"]) && isset($_POST["phoneNumber"]) && isset($_POST["email"]) &&isset($_POST["address"])) {
     $name = mysqli_escape_string($conn,$_POST["name"]);
     $surname = mysqli_escape_string($conn,$_POST["surname"]);
     $phoneNumber = mysqli_escape_string($conn,$_POST["phoneNumber"]);
     $email = mysqli_escape_string($conn,$_POST["email"]);
     $address = mysqli_escape_string($conn,$_POST["address"]);
     $dateOfBirth = mysqli_escape_string($conn,$_POST["dateOfBirth"]);
-    $userType = mysqli_escape_string($conn,$_POST["userType"]);
-    $password = mysqli_escape_string($conn,$_POST["password"]);
-    $conn->query("INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth,userType)
-    VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth','$userType');");
-
-
+    $password = password_hash(mysqli_escape_string($conn,$_POST["password"]),PASSWORD_DEFAULT);
+    $sql = "INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth)
+    VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth');";
+    if($conn->query($sql)){
+        $formError = false;
+    } else {
+        $formError = true;
+        echo mysqli_error($conn);
+    }
 }
 ?>
 
-<div class="wrapper-center" style="position: relative">
+<div class="wrapper-center">
     <a href="login.php" class="button" style="position: absolute; left: 10%; top: 12%;">Back</a>
     <form action="signup.php" method="POST" class="flex-form">
         <h2>Signup form</h2>
@@ -42,12 +46,19 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
         <input type="text" name="address" id="address"/>
         <label for="dateOfBirth">Date of birth</label>
         <input type="date" name="dateOfBirth" id="dateOfBirth"/>
-        <label for="userType">Are you a student or a tutor?</label>
-        <input type="text" name="userType" id="userType"/>
         <label for="password">Password</label>
         <input type="password" name="password" id="password"/>
         <label for="retypePassword">Confirm Password</label>
         <input type="password" name="retypePassword" id="retypePassword"/>
+        <?php
+        if(isset($formError)) {
+            if ($formError) {
+                displayError("There was an error while creating your account!");
+            } else {
+                displaySuccessMessage("Your account was created successfully!");
+            }
+        }
+        ?>
         <button type="submit">Create account</button>
     </form>
 </div>

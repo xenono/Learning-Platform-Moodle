@@ -10,18 +10,29 @@ $lectureResources = [];
 if (isset($_GET["courseId"]) && isset($_GET["lecture"])) {
     $courseId = $_GET["courseId"];
     $currentLecture = $_GET["lecture"];
-    $courseInfo = getCourseInfo($conn,$courseId);
+    $courseInfo = getCourseInfo($conn, $courseId);
     $currentCourse = $courseInfo->courseName;
-    $lectures = getAllLectures($conn,$courseId);
+    $lectures = getAllLectures($conn, $courseId);
     $lectureResources = getLectureResources($conn, $lectures[$currentLecture - 1]->lectureId);
+    getCourseProgress($conn,$courseId,$_SESSION["userId"]);
+}
+if(isset($_POST["completeLecture"]) && isset($_POST["lectureId"])){
+    $lectureId = $lectures[$currentLecture - 1]->lectureId;
+    completeLecture($conn,$lectureId,$_SESSION["userId"],$courseId);
+    echo mysqli_error($conn);
 }
 
-//if (!$currentCourse || !$lectures) {
-//    Header("Location: dashboard.php");
-//}
+$isCurrentLectureCompleted = isLectureCompleted($conn,$lectures[$currentLecture - 1]->lectureId, $_SESSION["userId"],$courseId);
+
 ?>
 
 <div class="courses-content-wrapper">
+    <div class="progress-bar-wrapper">
+        <h2>Course progress: <?php echo getCourseProgress($conn,$courseId,$_SESSION["userId"]) . "%"; ?></h2>
+        <div class="progress-bar">
+            <div class="progress-bar-inner" style="<?php echo "width:" . getCourseProgress($conn,$courseId,$_SESSION["userId"]). "%;";?>"></div>
+        </div>
+    </div>
     <div class="week-dropdown">
         <h1>All lectures</h1>
         <ul class="week-dropdown-list">
@@ -36,38 +47,34 @@ if (isset($_GET["courseId"]) && isset($_GET["lecture"])) {
             <?php } ?>
         </ul>
     </div>
-        <div class="course-content-container course-content">
+    <div class="course-content-container course-content">
+        <div class="course-title-wrapper">
             <h1><?php echo $currentCourse . " Lecture" . " " . $currentLecture ?></h1>
-            <p class="course-content-description">
-                <?php echo $lectures[$currentLecture - 1]->lectureDescription?>
-            </p>
-            <?php
-            foreach ($lectureResources as $lectureResource) { ?>
-            <div class="file-wrapper">
-                <img src="../public/assets/pptx.png" alt="" class="file-icon">
-                <p class="file-name"><?php echo $lectureResource->fileName ?></p>
-            </div>
-            <?php } ?>
-            <h1> STATIC </h1>
-            <div class="file-wrapper">
-                <img src="../public/assets/pptx.png" alt="" class="file-icon">
-                <p class="file-name">3--Lecture.pptx</p>
-            </div>
-            <div class="file-wrapper">
-                <img src="../public/assets/file.png" alt="" class="file-icon">
-                <p class="file-name">3--HTML-exercise.doc/p>
-            </div>
-            <div class="file-wrapper">
-                <img src="../public/assets/file.png" alt="" class="file-icon">
-                <p class="file-name">3--CSS-exercise.docx</p>
-            </div>
-
-            <div class="file-wrapper">
-                <img src="../public/assets/folder.png" alt="" class="file-icon">
-                <p class="file-name">Additional Resources</p>
-            </div>
+            <form action="<?php echo "courses.php?" . "courseId=$courseId&lecture=$currentLecture"?>" method="POST" class="complete-toggle-button">
+                <input type="text" hidden name="lectureId" value="<?php echo $lectures[$currentLecture - 1]->lectureId?>">
+                <button type="submit" name="completeLecture" class="button-tick <?php if(isset($isCurrentLectureCompleted) && $isCurrentLectureCompleted == 1) echo "button-ticked"?>" <?php if(isset($isCurrentLectureCompleted) && $isCurrentLectureCompleted == 1) echo "disabled"?>><img src="../public/assets/tick.png" alt=""></button>
+            </form>
         </div>
+
+        <p class="course-content-description">
+            <?php echo $lectures[$currentLecture - 1]->lectureDescription ?>
+        </p>
+        <?php
+        foreach ($lectureResources as $lectureResource) {
+            $filename = explode("/", $lectureResource->fileName)[1];
+            $fileExt = explode(".", $filename);
+            $fileExt = $fileExt[sizeof($fileExt) - 1];
+            $fileImg = "file.png";
+            if ($fileExt == "pptx") $fileImg = "pptx.png";
+            else if ($fileExt == "zip" || $fileExt == "rar") $fileImg = "folder.png";
+            ?>
+            <div class="file-wrapper">
+                <img src="../public/assets/<?php echo $fileImg ?>" alt="" class="file-icon">
+                <p class="file-name"><a download href="<?php echo "../" . $lectureResource->fileName ?>"><?php echo $filename; ?></a> </p>
+            </div>
+        <?php } ?>
     </div>
+</div>
 </div>
 
 <?php
