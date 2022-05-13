@@ -44,10 +44,6 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
                 echo "nav-item-active";
             } ?>" href="../views/index.php"> Homepage </a>
         <?php } else if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] === true) { ?>
-
-            <a class="nav-item <?php if ($currentPage == "index.php") {
-                echo "nav-item-active";
-            } ?>" href="../views/index.php">Home</a>
             <a class="nav-item <?php if ($currentPage == "dashboard.php") {
                 echo "nav-item-active";
             } ?>" href="../views/dashboard.php">Dashboard</a>
@@ -55,14 +51,14 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
                 echo "nav-item-active";
             } ?>" href="../views/admin.php">Admin</a>
             <div class="nav-item-dropdown">
-                    <span class="nav-item  <?php if ($currentPage == "courses.php") {
+                    <a class="nav-item  <?php if ($currentPage == "courses.php") {
                         echo "nav-item-active";
-                    } ?>" id="course-dropdown-parent" href="../views/courses.php">courses</span>
+                    } ?>" id="course-dropdown-parent" href="../views/courses.php#">courses</a>
                 <div class="nav-item-course-dropdown" id="course-dropdown-list">
                     <?php
                     if (isset($courses)) {
                         foreach (array_keys($courses) as $courseId) {?>
-                            <a class="nav-item"
+                            <a class="nav-item dropdown-nav-item"
                                href="../views/courses.php?courseId=<?php echo $courseId ?>&lecture=1"><?php echo $courses[$courseId] ?></a>
                         <?php }
                     } ?>

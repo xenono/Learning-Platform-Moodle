@@ -66,7 +66,7 @@ if (sizeof($courseIds) > 0) {
 		$courseId = $courseIds[$i][0];
 
 		$quizzes = mysqli_query($conn, "SELECT quizName, quizId FROM quiz INNER JOIN course ON quiz.courseId=course.courseId WHERE quiz.courseId=$courseId");
-		
+		echo mysqli_error($conn);
 		while ($row = mysqli_fetch_array($quizzes)) {
 			array_push($quizNamesResults, $row['quizName']);
 			array_push($quizIds, $row['quizId']);
@@ -268,7 +268,7 @@ $quizzes = array('SE Quiz 1','SE Quiz 2', 'OOSD Quiz 1','OOSD Quiz 2');
 		        	}
 		        }
 		        if ($fileExists == 0) {
-					if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/uploads/$filename")) && ($noOfForbiddenChars == 0)){
+					if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)){
 
 						$authorId = $_SESSION["userId"];
 						$sql = "INSERT INTO file(fileName,authorId) VALUES ('$filename','$authorId');";

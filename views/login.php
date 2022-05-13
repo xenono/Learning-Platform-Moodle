@@ -11,13 +11,17 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
         $res = mysqli_query($conn, $sqlQuery);
         if(mysqli_num_rows($res) > 0){
             while($row = mysqli_fetch_array($res)){
-                if($row["id"] == $userId && $row["password"] == $password && $row["userAuthorised"] == 1 ){
-                    $_SESSION["isLoggedIn"] = true;
-                    $_SESSION["userId"] = $userId;
-                    $_SESSION["name"] = $row["name"];
-                    $_SESSION["userType"] = $row["userType"];
-                    header('Location: ./dashboard.php');
-                    break;
+                if($row["id"] == $userId && $row["userAuthorised"] == 1 ){
+                    if(password_verify($password,$row["password"])){
+                        $_SESSION["isLoggedIn"] = true;
+                        $_SESSION["userId"] = $userId;
+                        $_SESSION["name"] = $row["name"];
+                        $_SESSION["surname"] = $row["surname"];
+                        $_SESSION["userType"] = $row["userType"];
+                        header('Location: ./dashboard.php');
+                        break;
+                    }
+
                 }
             }
             $isError = true;
@@ -35,7 +39,7 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
         <label for="student-id">Identity Number</label>
         <input type="text" name="student-id" id="student-id"/>
         <label for="password">Password</label>
-        <input type="text" name="password" id="password"/>
+        <input type="password" name="password" id="password"/>
         <button type="submit">Login</button>
         <?php
         if($isError){?>

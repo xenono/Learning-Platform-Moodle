@@ -95,6 +95,20 @@ if(isset($_POST["updateLecture"]) && isset($_FILES["files"])){
     }
 
 }
+
+// Handles deleting resources from lectures
+if(isset($_POST["deleteResource"])){
+    $fileId = $_POST["fileId"];
+    $lectureId = $_POST["lectureId"];
+
+
+
+    $sql = "DELETE FROM file WHERE fileId=$fileId";
+    $conn->query($sql);
+    $sql = "DELETE FROM lect;ureresource WHERE fileId=$fileId AND lectureId=$lectureId";
+    $conn->query($sql);
+
+}
 ?>
 
 <div class="admin">
@@ -139,8 +153,10 @@ if(isset($_POST["updateLecture"]) && isset($_FILES["files"])){
                                 ?>
                                 <li>
                                     <a download  href="<?php echo "../" . $resource->fileName?>"><?php echo $nameOfTheFile; ?></a>
-                                    <form action="">
-                                        <input type="text" hidden value="<?php echo $resource->fileId?>">
+                                    <form action="adminEditCourse.php" method="POST">
+                                        <input type="text" hidden name="courseId" value="<?php echo $courseId?>">
+                                        <input type="text" hidden name="lectureId" value="<?php echo $lecture->lectureId?>">
+                                        <input type="text" hidden name="fileId" value="<?php echo $resource->fileId?>">
                                         <button type="submit" name="deleteResource" class="delete-btn">X</button>
                                     </form>
                                 </li>
