@@ -45,4 +45,40 @@ function getCourseInfo($conn, $courseId): object
     return $res->fetch_object();
 }
 
+function deleteResource($conn, $fileId){
+    $sql = "DELETE FROM file WHERE fileId=$fileId";
+    $sqlLectureResource = "DELETE FROM lectureresource WHERE fileId=$fileId";
+}
+
+function completeLecture($conn,$lectureId, $studentId,$courseId){
+    // Check if lecture is already completed
+    $sql = "SELECT * from studentcompletedlecture WHERE lectureId=$lectureId AND studentId=$studentId AND courseId=$courseId";
+    $res = $conn->query($sql);
+    if($res && $res->num_rows <= 0){
+        $sql = "INSERT INTO studentcompletedlecture (lectureId,studentId,courseId) VALUES ('$lectureId','$studentId','$courseId')";
+        $conn->query($sql);
+    }
+}
+
+function isLectureCompleted($conn,$lectureId,$studentId,$courseId): bool{
+    $sql = "SELECT * from studentcompletedlecture WHERE lectureId=$lectureId AND studentId=$studentId AND courseId=$courseId";
+    $res = $conn->query($sql);
+    if($res && $res->num_rows > 0) return true;
+    return false;
+}
+
+function getCourseProgress($conn,$courseId,$studentId){
+    $sql = "SELECT COUNT(lectureId) from studentcompletedlecture WHERE courseId=$courseId AND studentId=$studentId";
+    $countStudentCompletedLecturesQuery = $conn->query($sql);
+    if($countStudentCompletedLecturesQuery && $countStudentCompletedLecturesQuery->num_rows > 0){
+        $studentCompletedLecture = mysqli_fetch_row($countStudentCompletedLecturesQuery)[0];
+        $sql = "SELECT COUNT(lectureId) from lecture WHERE courseId=$courseId";
+        $countLectureOfACourse = $conn->query($sql);
+        if($countLectureOfACourse && $countLectureOfACourse->num_rows > 0){
+            $numberOfLectures = mysqli_fetch_row($countLectureOfACourse)[0];
+            return floor(($studentCompletedLecture * 100) / $numberOfLectures);
+        }
+    }
+    return 0;
+}
 ?>

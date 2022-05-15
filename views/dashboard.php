@@ -3,16 +3,16 @@ include("../includes/header.php");
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
 include("../config/Connection.php");
 global $conn;
+global $totalFee;
 if(!isset($_SESSION["userId"])){
     Header("Location: login.php");
 }
 $userId = $_SESSION["userId"];
-$sql = "SELECT courseName FROM studentcourse INNER JOIN course ON studentcourse.courseId=course.courseId WHERE studentId='$userId' ";
-$result = $conn->query($sql);
-echo mysqli_error($conn);
-$courses = array();
-if ($result->num_rows > 0){
-    $courses = mysqli_fetch_all($result);
+$userType = $_SESSION["userType"];
+
+if ($userType == "student" || $userType == "admin") {
+    $totalFee = 0;
+    $courses = getUserCourses($conn, $_SESSION["userId"]);
 }
 ?>
 <?php
@@ -28,17 +28,48 @@ if (isset($_GET["formSubmission"])) {
 ?>
 <div>
 </div>
-<div>
-    <?php if (count($courses) > 0) {
-        echo "<p>Your courses</p>";
-        foreach ($courses as $course) {
-            echo "<p>" . $course[0] . "</p>";
-        }
-    } else { ?>
+<!--<div style="margin-top: 50px;">-->
+<!---->
+<!--    --><?php
+//    // only if a student logged in the courses and courseFee pops up.
+//    if ($userType == "student" || $userType == "admin"){
+//    if (isset($courses) && count($courses) > 0) {
+//        echo "<p>Your courses</p>";
+//        foreach ($courses as $course) {
+//            echo "<p>" . $course . "</p>";
+//        }
+//    } else { ?>
+<!--        <p>No courses</p>-->
+<!--    --><?php //}
+//    }
+//    ?>
+<!--    <a href="enrollOnCourse.php" class="button">Enroll on a course</a>-->
+<!---->
+<!--</div>-->
+<div class="intro wrapper">
+    <h2>Hello <?php echo $_SESSION["name"] . " " . $_SESSION["surname"]; ?>!</h2>
+    <h2>Welcome to Virtual Learning Environment by AceTraining!</h2>
+</div>
+<div class="wrapper dashboard-courses">
+    <h1>Your courses</h1>
+    <div class="grid">
+        <?php
+        if (isset($courses) && count($courses) > 0) {
+        foreach (array_keys($courses) as $courseId) { ?>
+            <div class="grid-course">
+                <h2><?php echo $courses[$courseId] ?></h2>
+                <a href=<?php echo "courses.php?courseId=$courseId&lecture=1" ?> class="button">Course page</a>
+            </div>
+        <?php }
+        } else { ?>
         <p>No courses</p>
-    <?php } ?>
-    <a href="enrollOnCourse.php" class="button">Enroll on a course</a>
+        <?php } ?>
 
+    </div>
+</div>
+<div class="wrapper">
+    <h1>Find your new learning path!</h1>
+    <a href="enrollOnCourse.php" class="button" style="width: 70%; margin:0 auto;">See other courses and enroll</a>
 </div>
 <div class="container">
 
@@ -52,12 +83,7 @@ if (isset($_GET["formSubmission"])) {
             <div class="tooltip">
                 <a href="">My_Courses</a>
                 <span class="tooltiptext">
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE1&week=1">Website development</a><br>
-                    <a href="http://localhost:63342/ace_training/views/courses.php?course=CSCORE2&week=1">Networking</a><br>
-                    <a href="">C++</a><br>
-                    <a href="">Software Engineering</a><br>
-                    <a href="">Robotics</a><br>
-                    <a href="">AI</a>
+
                 </span>
             </div>
             <br>
@@ -72,7 +98,7 @@ if (isset($_GET["formSubmission"])) {
         </div>
     </div>
     <div class="navigation-box">
-        <h2>Welcome</h2>
+        <h2>Welcome <?php echo $_SESSION["name"]; ?></h2>
 
         <div class="box">
             <div class="icon">
@@ -82,29 +108,17 @@ if (isset($_GET["formSubmission"])) {
                 <a href="">About Ace training</a>
             </div>
         </div>
-        <div class="box">
-            <div class="icon">
-                <i class="fa fa-bell" aria-hidden="true"></i>
-            </div>
-            <div class="content">
-                <a href="">Notification</a>
-            </div>
-        </div>
-    </div>
-    <div class="navigation-box">
+
         <div class="box">
             <div class="icon">
                 <i class="fa fa-university" aria-hidden="true"></i>
             </div>
             <div class="content">
-                <a href="">University faculty</a>
+                <a href="../views/universityFaculty.php">University faculty</a>
             </div>
         </div>
-
-    </div>
-
 </div>
-
+</div>
 <?php
 include "../includes/footer.php";
 ?>

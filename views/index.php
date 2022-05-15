@@ -1,14 +1,6 @@
 <?php
 include("../includes/header.php");
-
-
-
-// 301 Moved Permanently
-//header("Location: ./views/dashboard.php", true, 301);
-//exit();
 ?>
-<DOCTYPE >
-    <html>
     <head>
         <title>Home Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,8 +18,5 @@ include("../includes/header.php");
 
 
     </div>
+    <?php include "../includes/footer.php" ?>
 
-    </body>
-    </html>
-
-</DOCTYPE>

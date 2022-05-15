@@ -1,97 +1,148 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/header.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/includes/auth.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/student.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/tutor.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/scripts/restriction.php";
 include $_SERVER["DOCUMENT_ROOT"] . "/config/Connection.php";
 global $conn;
-//print_r($_SESSION);
+global $resultingTutor;
+global $courses;
+global $ans;
 
 if (isset($_SESSION["userType"]) && $_SESSION["userType"] === "student") {
     echo "<div class = 'error-box'>
          <p> Unauthorised Access!</p>
-         </div>;";
+         </div>";
     die();
 }
+// gets the courses done by the logged tutor
+if ($_SESSION["userType"] === "tutor"){
+    $userId = $_SESSION["userId"];
+    $userType = $_SESSION["userType"];
 
+ $sql = "SELECT course.courseName,course.courseId FROM tutorcourse INNER JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $userId";
+ $resultingTutor = $conn->query($sql);
+ if($resultingTutor){
+     $resultingTutor = mysqli_fetch_all($resultingTutor);
+         }
+     }
+
+// get the course details
 $sql = "SELECT * from course";
 $courses = $conn->query($sql);
 if ($courses->num_rows > 0) {
     $courses = mysqli_fetch_all($courses);
 }
+
+
 ?>
-
 <div class="admin">
+<?php if ($_SESSION["userType"] === "admin"){ ?>
     <h1> Admin Page </h1>
-
+    <?php
+}
+else{
+    echo "<h1> Welcome ".$_SESSION['name']. " to tutors portal</h1>";
+}
+    ?>
     <div class="page-content">
+
+        <?php
+        //only admin can view and authorise students
+        if ($_SESSION["userType"] === "admin"){ ?>
         <h2><i class="fa fa-id-badge" aria-hidden="true"> Student Applications</i></h2>
         <?php
+
         $sql = "SELECT * FROM user WHERE userType = 'student' AND userAuthorised = 0";
         $result = mysqli_query($conn, $sql);
         authoriseStudent($conn);
         rejectStudent($conn);
         while ($row = $result->fetch_object()) {
-            ; ?>
+             ?>
             <form method='post' action='admin.php'>
                 <table>
                     <tr>
                         <td><?php echo $row->id ?> </td>
                         <td><?php echo $row->name ?></td>
                         <td><?php echo $row->surname ?></td>
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
+                        <td><input type='submit' name='authoriseStudent' value='Authorise'</td>
+                        <td><input type='submit' name='rejectStudent' value='Reject'</td>
                     </tr>
                 </table>
                 <input type='hidden' name='userAuthorised' value='<?php echo $row->userAuthorised ?>'/>
                 <input type='hidden' name='id' value='<?php echo $row->id ?>'/>
 
             </form>
-
             <?php
+        }
         }
         ?>
     </div>
     <div class="page-content">
+        <table>
         <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of students onto applied courses </i></h2>
+            <tr>
+                <th>Student Id</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Course Id number</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
         <?php
-        $sql = "SELECT studentcourse.studentId ,studentcourse.courseId , studentcourse.courseApproved ,user.name,user.surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id where courseApproved = 0";
+        //both admin and tutors can view the details of students enrollment. But tutors are restricted from viewing the enrollment of students from other courses
+        {
+        $sql = "SELECT studentcourse.studentId AS studentId ,studentcourse.courseId AS courseId  ,user.name AS name ,user.surname AS surname   FROM studentcourse  INNER JOIN user ON studentcourse.studentId = user.id WHERE studentcourse.courseApproved = 0";
         $result = mysqli_query($conn, $sql);
         authoriseEnrollmentCourse($conn);
         rejectEnrollmentCourse($conn);
+
         while ($row = $result->fetch_object()) {
-            ?>
-            <form method='post' action='admin.php'>
-                <table>
-                    <tr>
-                        <td><?php echo $row->studentId ?> </td>
-                        <td><?php echo $row->name ?></td>
-                        <td><?php echo $row->surname ?></td>
-                        <td><?php echo $row->courseId ?></td>
-
-                        <td><input type='submit' name='authorise' value='Authorise'</td>
-                        <td><input type='submit' name='reject' value='Reject'</td>
-                    </tr>
-                </table>
-                <input type='hidden' name='courseApproved' value='<?php echo $row->courseApproved ?>'/>
-                <input type='hidden' name='course' value='<?php echo $row->courseId ?>'/>
-                <input type='hidden' name='student' value='<?php echo $row->studentId ?>'/>
-            </form>
-
-            <?php
+            // if user is a tutor, then he can enroll students on his course
+            if ($_SESSION['userType'] == 'tutor'){
+                foreach($resultingTutor as $ans){
+                    if($row->courseId ==  $ans[1]){
+                        runenrollmentStudent($conn, $row);
+                }
+            }
+            }
+            // admin can enroll all
+            else{
+                runenrollmentStudent($conn, $row);
+            }
         }
+        }
+
         ?>
+        </table>
 
     </div>
       <div class="page-content">
-          <h2><i class="fa fa-university"> Tutors Enrollment </i> </h2>
+
+          <?php
+          //only admin can view and authorise tutors
+          if ($_SESSION["userType"] === "admin"){ ?>
+          <table>
+          <h2><i class="fa fa-university"> Tutors Application </i> </h2>
+              <tr>
+                  <th>Tutor ID number</th>
+                  <th>Name</th>
+                  <th>Surname</th>
+                  <th>Contact details</th>
+                  <th>e-mail Address</th>
+                  <th>Place of residence</th>
+                  <th>Date of birth</th>
+              </tr>
               <?php
               $sql = "SELECT * FROM user WHERE userType = 'tutor' AND userAuthorised = 0";
               $result = mysqli_query($conn, $sql);
               authoriseTutor($conn);
-              //rejectTutor($conn);
+              rejectTutor($conn);
               if($result->num_rows > 0) {
               while($row = $result->fetch_object()){?>
                   <form method ='post' action = 'admin.php'>
-                      <table>
+
                           <tr><td><?php echo $row->id ?> </td>
                               <td><?php echo $row->name ?></td>
                               <td><?php echo $row -> surname?></td>
@@ -99,8 +150,8 @@ if ($courses->num_rows > 0) {
                               <td><?php echo $row -> email?></td>
                               <td><?php echo $row -> address?></td>
                               <td><?php echo $row -> dateOfBirth?></td>
-                              <td><input type='submit' name = 'authorise' value = 'Authorise'</td>
-                              <td><input type='submit' name = 'reject' value = 'Reject'</td>
+                              <td><input type='submit' name = 'authoriseTutor' value = 'Authorise'</td>
+                              <td><input type='submit' name = 'rejectTutor' value = 'Reject'</td>
                           </tr></table>
                       <input type = 'hidden' name = 'userAuthorised' value = '<?php echo $row->userAuthorised ?>'/>
                       <input type = 'hidden' name = 'id' value = '<?php echo $row->id ?>'/>
@@ -108,33 +159,171 @@ if ($courses->num_rows > 0) {
 
                   <?php
               } } else {
-                  echo "<h1 style='color:black;'>No tutors to authorise</h1>";
+                  echo "<h3 style='color:black;'>No tutors to authorise</h3>";
               }
               ?>
+          </table><?php } ?>
           </div>
     <div class="page-content">
-        <table>
+
+        <?php
+        //only admin can view and authorise tutors onto courses
+        if ($_SESSION["userType"] === "admin"){ ?>
+        <h2><i class="fa fa-book" aria-hidden="true"> Enrollment of tutors onto courses </i></h2>
+
+        <?php
+        $sql = "SELECT tutor.tutorId ,user.name,user.surname, tutor.contractType  FROM tutor  INNER JOIN user ON tutor.tutorId = user.id  ";
+        $result = mysqli_query($conn, $sql);
+        enrollTutor($conn);
+        courseLeader($conn)?>
+        <table style="padding: 10px; column-gap: 10px; row-gap: 10px">
             <tr>
+                <th>Tutor Id number</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Select the course</th>
+                <th>Type of contract</th>
+                <th>course Leader</th>
+                <th>Submit</th>
+            </tr><?php
+        while ($row = $result->fetch_object()) {
+            ?>
+            <form method='post' action='admin.php'>
+                    <tr>
+                        <td><?php echo $row->tutorId ?> </td>
+                        <td><?php echo $row->name ?></td>
+                        <td><?php echo $row->surname ?></td>
+                        <td>
+                            <select name="courseEnroll" id="courseEnroll" required>
+                                <?php
+                                foreach ($courses as $course) { ?>
+                                    <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                                <?php } ?>
+                            </select>
+                        </td>
+                        <td>
+                            <select name = "contract" id = "contract" required>
+                               <option value = "FT">Full-Time</option>
+                                <option value= "PT">Part-Time</option>
+
+                            </select>
+
+                        </td>
+                        <td><input type='submit' name='courseLeader' value='CourseLeader'
+                        </td>
+                        <td><input type='submit' name='enrollTutor' value='Enroll'</td>
+                    </tr>
+
+                <input type='hidden' name='tutorId' value='<?php echo $row->tutorId ?>'/>
+                <input type='hidden' name='tutorName' value='<?php echo $row->name ?>'/>
+                <input type='hidden' name='tutorSurname' value='<?php echo $row->surname ?>'/>
+
+            </form>
+
+            <?php
+        }
+            }
+        ?> </table>
+    </div>
+    <div class="page-content">
+        <table>
+            <h2><i class="fa fa-info-circle"> Edict the course </i> </h2>
+            <tr>
+                <th>Course Number</th>
                 <th>Course name</th>
                 <th>Course Tutor</th>
                 <th>Edit course</th>
             </tr>
-            <?php foreach ($courses as $course) {?>
-                    <tr>
-                        <td><?php echo $course[1] ?></td>
-                        <td><?php echo $course[2] ?></td>
-                        <td style="padding: 10px;">
-                            <form action="adminEditCourse.php" method="POST" class="flex-column">
-                                <input type="text" hidden value="<?php echo $course[0] ?>" name="courseId">
-                                <button type="submit" style="margin: 0 auto;">Edit</button>
-                            </form>
-                        </td>
-                    </tr>
+            <?php foreach ($courses as $course) {
+                if ($_SESSION['userType'] == 'tutor') {
+                    foreach ($resultingTutor as $ans) {
+                        if ($course[0] == $ans[1]) {
+                            runedictCourse($conn, $course);
+                        }
 
-            <?php } ?>
+                    }
+
+                }
+                else{
+                    runedictCourse($conn, $course);
+                }
+            }
+            ?>
+        </table>
+    </div>
+    <div class="page-content">
+        <table>
+            <h2><i class="fa fa-info-circle"> Information </i> </h2>
+            <h3>Tutors Info</h3>
+            <tr>
+                <th>Tutor</th>
+                <th>Course </th>
+            </tr>
+            <?php
+            $sql = "SELECT user.name AS name, user.surname AS surname, user.id AS Id  FROM tutor
+                    LEFT JOIN user ON tutor.tutorId = user.id ";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+               while($row = $result->fetch_object()){?>
+                   <tr>
+                       <td><?php echo $row->name."".$row->surname ; ?></td>
+                       <td>
+                           <?php
+                           $sqlin = "SELECT course.courseName AS courseName FROM tutorcourse LEFT JOIN course ON tutorcourse.courseId = course.courseId WHERE tutorcourse.tutorId = $row->Id ";
+                           $resultsqlin = mysqli_query($conn, $sqlin);
+                           if($resultsqlin) {
+                               while ($dis = $resultsqlin->fetch_object()) {
+                                   echo $dis->courseName."<br>";
+                               }
+                           }
+                           ?>
+                       </td>
+                   </tr>
+           <?php
+               }
+            }
+            ?>
+        </table>
+        <table>
+            <!--  Tutors can only see students on their branch -->
+            <h3>Students Info</h3>
+             <tr>
+                 <th>Student ID Number</th>
+                 <th>Name</th>
+                 <th>Surname</th>
+                 <th>Course Name</th>
+                 <th>Financial Status</th>
+             </tr>
+            <?php
+            $sql = "SELECT user.name AS name, user.surname AS surname, user.id AS Id, studentcourse.courseId AS courseId,course.courseFee AS fee, course.courseName AS courseName FROM studentcourse 
+                    LEFT JOIN user ON studentcourse.studentId = user.id    LEFT JOIN course ON studentcourse.courseId = course.courseId   LEFT JOIN student ON studentcourse.studentId = student.studentId AND user.id
+                    WHERE studentcourse.courseApproved = 1";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+            while ($row = $result->fetch_object()) {
+                if ($_SESSION['userType'] == 'tutor'){
+                    foreach($resultingTutor as $ans) {
+                        if ($row->courseId == $ans[1]) {
+                            rundisplayStudent($conn, $row);
+                        }
+                    }
+                }
+                else{
+                    rundisplayStudent($conn, $row);
+                }
+            }
+            }
+            else{
+                echo $conn->error;
+            }
+            ?>
         </table>
     </div>
      <div class="page-content">
+         <!--
+         only admin can add new course into the system-->
+         <?php if ($_SESSION['userType'] == 'admin'){
+         ?>
          <h2><i class="fa fa-file"> Add Course </i></h2>
         <?php
         if(isset($_POST["addCourseForm"])){
@@ -157,54 +346,12 @@ if ($courses->num_rows > 0) {
             <input type="text" name="courseLeader" id="courseLeader">
             <button type="submit" value="true" name="addCourseForm">Add</button>
         </form>
+         <?php
+         }
+         ?>
      </div>
-    <div class = "page-content">
-    <h1>Add files to lecture</h1>
-    <!--    <h2><i class = "fa fa-upload"> Upload File</i></h2>-->
-    <?php
-    if (isset($_POST["addResourceForm"]) && $_FILES["file"]) {
-        $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
-        $lectureDescription = mysqli_escape_string($conn, $_POST["lectureDescription"]);
-        $fileData = $_FILES["file"];
-
-        $tmpName = $fileData["tmp_name"];
-        $filename = $fileData["name"];
-        if (move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) {
-            $sql = "INSERT INTO lecture(courseId,lectureDescription) VALUES ('$courseId','$lectureDescription');";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-            $lectureId = $conn->insert_id;
-            $authorId = $_SESSION["userId"];
-            $sql = "INSERT INTO file(fileName,authorId) VALUES ('$tmpName','$authorId');";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-            $fileId = $conn->insert_id;
-            $sql = "INSERT INTO lectureresource (lectureId,fileId) VALUES ('$lectureId','$fileId')";
-            if (!$conn->query($sql)) {
-                echo mysqli_error($conn);
-            }
-        } else {
-            echo "File uploading has failed.";
-        }
-    } ?>
-    <form action="admin.php" method="POST" class="flex-form" enctype="multipart/form-data" style="margin-bottom: 50px;">
-        <label for="courseId">Choose course</label>
-        <select name="courseId" id="courseId" required>
-            <?php
-            foreach ($courses as $course) { ?>
-                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
-        </select>
-        <label for="lectureNumber">Lecture Number</label>
-        <input id="lectureNumber" name="lectureNumber" required type="number">
-        <label for="file">Lecture Resource</label>
-        <input type="file" name="file" id="file">
-        <button type="submit" value="true" name="addResourceForm">Add</button>
-    </form>
-
-    <!-- Assignment file handling -->
+     
+    <!-- Assignment file handling. Admin can access all files. But tutors are restricted to access files of their own course-->
 
     <h1>Assignments</h1>
     <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
@@ -394,13 +541,13 @@ if ($courses->num_rows > 0) {
         $answer2 = mysqli_escape_string($conn,$_POST["answer2"]);
         $answer3 = mysqli_escape_string($conn,$_POST["answer3"]);
         $answer4 = mysqli_escape_string($conn,$_POST["answer4"]);
-        $correctAnswer = "";
+        $correctAnswer = mysqli_escape_string($conn, $_POST["correctAnswer"]);
 
-        if ($_POST["correctAnswer"] == "Answer 1") {
+        if ($correctAnswer == "answer1") {
             $correctAnswer = $answer1;
-        } else if ($_POST["correctAnswer"] == "Answer 2") {
+        } else if ($correctAnswer == "answer2") {
             $correctAnswer = $answer2;
-        } else if ($_POST["correctAnswer"] == "Answer 3") {
+        } else if ($correctAnswer == "answer3") {
             $correctAnswer = $answer3;
         } else {
             $correctAnswer = $answer4;
