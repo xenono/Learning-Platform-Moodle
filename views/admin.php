@@ -564,13 +564,13 @@ else{
         $answer2 = mysqli_escape_string($conn,$_POST["answer2"]);
         $answer3 = mysqli_escape_string($conn,$_POST["answer3"]);
         $answer4 = mysqli_escape_string($conn,$_POST["answer4"]);
-        $correctAnswer = "";
+        $correctAnswer = mysqli_escape_string($conn, $_POST["correctAnswer"]);
 
-        if ($_POST["correctAnswer"] == "Answer 1") {
+        if ($correctAnswer == "answer1") {
             $correctAnswer = $answer1;
-        } else if ($_POST["correctAnswer"] == "Answer 2") {
+        } else if ($correctAnswer == "answer2") {
             $correctAnswer = $answer2;
-        } else if ($_POST["correctAnswer"] == "Answer 3") {
+        } else if ($correctAnswer == "answer3") {
             $correctAnswer = $answer3;
         } else {
             $correctAnswer = $answer4;

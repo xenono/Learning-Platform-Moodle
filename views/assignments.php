@@ -133,12 +133,6 @@ for ($i = 0; $i < sizeof($assignmentDueDates); $i++) {
 	}
 }
 
-/*
-					-- QUIZZES --
-*/
-
-$quizzes = array('SE Quiz 1','SE Quiz 2', 'OOSD Quiz 1','OOSD Quiz 2');
-
 ?>
 
 <!-- Assignments -->
@@ -312,15 +306,16 @@ $quizzes = array('SE Quiz 1','SE Quiz 2', 'OOSD Quiz 1','OOSD Quiz 2');
 	<div>
 		<h1>Quizzes</h1>
 		<div class = "quizzes">
+			<br /><br />
 			<ul class = "quizzes-list">
 				<?php foreach($quizNamesResults as $key => $quiz){?>
-					<br />
 					<div class = "quizzes-item">
 						<button id = "quizButton" onclick="location.href = 'quizzes.php?quizid=<?php echo $quizIds[$key]?>';"> <?php echo $quiz ?> </button>
 									
 							</div>
 				<?php } ?>
-				<br />
+			</ul>
+			<br /><br />
 		</div>
 	</div>
 </div>
