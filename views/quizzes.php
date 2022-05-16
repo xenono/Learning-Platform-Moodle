@@ -18,7 +18,6 @@ $sql = mysqli_query($conn, "SELECT courseId, quizName FROM quiz WHERE quizId=$qu
 
 while ($row = mysqli_fetch_array($sql)) {
 	$quizName = $row[1];
-	$quizId = $row[0];
 }
 
 $qQuestions = array();
