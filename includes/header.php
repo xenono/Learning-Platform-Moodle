@@ -53,7 +53,7 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
             <div class="nav-item-dropdown">
                     <a class="nav-item  <?php if ($currentPage == "courses.php") {
                         echo "nav-item-active";
-                    } ?>" id="course-dropdown-parent" href="../views/courses.php#">courses</a>
+                    } ?>" id="course-dropdown-parent" href="../views/courses.php?courseId=<?= array_keys($courses)[0] ?>&lecture=1">courses</a>
                 <div class="nav-item-course-dropdown" id="course-dropdown-list">
                     <?php
                     if (isset($courses)) {
@@ -71,6 +71,9 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
             <a class="nav-item <?php if ($currentPage == "grades.php") {
                 echo "nav-item-active";
             } ?>" href="../views/grades.php">grades</a>
+            <form action="logout.php" method="POST">
+                <button type="submit">Logout</button>
+            </form>
         <?php } ?>
     </nav>
 </header>

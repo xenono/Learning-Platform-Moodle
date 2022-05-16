@@ -55,24 +55,28 @@ $isCurrentLectureCompleted = isLectureCompleted($conn,$lectures[$currentLecture 
                 <button type="submit" name="completeLecture" class="button-tick <?php if(isset($isCurrentLectureCompleted) && $isCurrentLectureCompleted == 1) echo "button-ticked"?>" <?php if(isset($isCurrentLectureCompleted) && $isCurrentLectureCompleted == 1) echo "disabled"?>><img src="../public/assets/tick.png" alt=""></button>
             </form>
         </div>
+        <div class="lecture-description">
+            <h1 class="lecture-heading">Lecture description</h1>
+            <p><?php echo $lectures[$currentLecture - 1]->lectureDescription ?></p>
+        </div>
+        <div class="lecture-resources">
+            <h1 class="lecture-heading">Resources</h1>
+            <?php
+            foreach ($lectureResources as $lectureResource) {
+                $filename = explode("/", $lectureResource->fileName)[1];
+                $fileExt = explode(".", $filename);
+                $fileExt = $fileExt[sizeof($fileExt) - 1];
+                $fileImg = "file.png";
+                if ($fileExt == "pptx") $fileImg = "pptx.png";
+                else if ($fileExt == "zip" || $fileExt == "rar") $fileImg = "folder.png";
+                ?>
+                <div class="file-wrapper">
+                    <img src="../public/assets/<?php echo $fileImg ?>" alt="" class="file-icon">
+                    <p class="file-name"><a download href="<?php echo "../" . $lectureResource->fileName ?>"><?php echo $filename; ?></a> </p>
+                </div>
+            <?php } ?>
+        </div>
 
-        <p class="course-content-description">
-            <?php echo $lectures[$currentLecture - 1]->lectureDescription ?>
-        </p>
-        <?php
-        foreach ($lectureResources as $lectureResource) {
-            $filename = explode("/", $lectureResource->fileName)[1];
-            $fileExt = explode(".", $filename);
-            $fileExt = $fileExt[sizeof($fileExt) - 1];
-            $fileImg = "file.png";
-            if ($fileExt == "pptx") $fileImg = "pptx.png";
-            else if ($fileExt == "zip" || $fileExt == "rar") $fileImg = "folder.png";
-            ?>
-            <div class="file-wrapper">
-                <img src="../public/assets/<?php echo $fileImg ?>" alt="" class="file-icon">
-                <p class="file-name"><a download href="<?php echo "../" . $lectureResource->fileName ?>"><?php echo $filename; ?></a> </p>
-            </div>
-        <?php } ?>
     </div>
 </div>
 </div>
