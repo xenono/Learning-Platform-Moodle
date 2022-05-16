@@ -168,9 +168,6 @@ a:visited {
     background-color: greenyellow;
     padding: 20px 10px;
 }
-
-
-
 .error {
     width: 100%;
     text-align: center;
@@ -514,8 +511,7 @@ footer div p {
     height: 100%;
     margin: auto;
     display: grid;
-    grid-template-rows: 1,35px;
-    color: var(--orange);
+    grid-template-rows: 1fr 35px;
     /*grid-template-columns: 1;*/
     /*grid-template-rows: 2;*/
 }

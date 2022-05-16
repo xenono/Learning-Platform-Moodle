@@ -350,23 +350,34 @@ else{
          }
          ?>
      </div>
-     
     <!-- Assignment file handling. Admin can access all files. But tutors are restricted to access files of their own course-->
-
     <h1>Assignments</h1>
     <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
     <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
         <label for="courseId">Choose course</label>
         <select name="courseId" id="courseId" required>
             <?php
-            foreach ($courses as $course) { ?>
+            foreach ($courses as $course) {
+                if($_SESSION['userType'] == 'tutor'){
+                    foreach ($resultingTutor as $ans){
+                        if ($course[0] == $ans[1]){
+                            ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
+            <?php }
+                    }
+                }
+             else {
+            ?>
+             <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+             <?php
+}
+         }
+ ?>
         </select>
         <label for="assignmentDetails">Assignment Details</label>
         <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
         <label for="assignmentDate">Assignment Due Date</label>
-        <input type="date" id="assignmentDate" name="assignmentDate" required></input>
+        <input type="date" id="assignmentDate" name="assignmentDate" required> </input>
         <label for="file">Assignment Resource</label>
         <input type="file" name="file" id="file">
         <button type="submit" value="true" name="addAssignmentResource">Add</button>
@@ -392,7 +403,7 @@ else{
             }
         }
 
-        if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/learning-platform-moodle/uploads/$filename")) && ($noOfForbiddenChars == 0)){
+        if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)){
             $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
             if(!$conn->query($sql)){
                 echo mysqli_error($conn);
@@ -459,9 +470,21 @@ else{
         <label for="courseId">Course</label>
         <select name="courseId" id="courseId" required>
             <?php
-            foreach ($courses as $course) { ?>
+            foreach ($courses as $course) {
+                if ($_SESSION['userType'] == 'tutor'){
+                    foreach ($resultingTutor as $ans){
+                        if ($course[0] == $ans[1]){
+                            ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php } ?>
+            <?php }
+                    }
+                }else{
+                    ?>
+            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+            <?php
+                }
+            }
+            ?>
         </select>
         <label for="quizName">Quiz Name</label>
         <input type="text" id="quizName" name="quizName" required></input>
