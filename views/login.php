@@ -40,12 +40,12 @@ if(isset($_POST["student-id"]) && isset($_POST["password"])){
         <input type="text" name="student-id" id="student-id"/>
         <label for="password">Password</label>
         <input type="password" name="password" id="password"/>
-        <button type="submit">Login</button>
+        <button type="submit" style="margin-bottom: 10px;">Login</button>
         <?php
         if($isError){?>
             <p>Credenitals not found!</p>
         <?php }?>
-        <p>Don't have an account?</p>
+        <p style="margin-bottom: 10px;">Don't have an account?</p>
         <a href="signup.php" class="button">Sign up</a>
     </form>
 

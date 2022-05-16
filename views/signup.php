@@ -31,7 +31,7 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
 ?>
 
 <div class="wrapper-center">
-    <a href="login.php" class="button" style="position: absolute; left: 10%; top: 12%;">Back</a>
+    <a href="login.php" class="button" style="position: absolute; left: 10%; top: 12%;">Login</a>
     <form action="signup.php" method="POST" class="flex-form">
         <h2>Signup form</h2>
         <label for="name">Name</label>
