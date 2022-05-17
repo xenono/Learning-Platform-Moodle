@@ -1,0 +1,1 @@
+UPDATE `employee` SET `attendance`='1' WHERE -1
