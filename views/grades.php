@@ -5,8 +5,8 @@ $userId = $_SESSION["userId"];
 if ($userId == true){
     echo "logged in as $userId ";
 }
-
 ?>
+<h1>Grades</h1>
     <style>
         #button1{
             color: blue;
