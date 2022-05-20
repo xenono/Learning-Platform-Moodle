@@ -3,26 +3,28 @@ const courseDropdownParent = document.getElementById("course-dropdown-parent")
 const courseDropdownList = document.getElementById("course-dropdown-list")
 const courseDropdownNavItems = document.querySelectorAll(".dropdown-nav-item");
 // Listeners
-courseDropdownParent.addEventListener("mouseover", (e) => {
-    courseDropdownList.style.display = "initial";
-})
-courseDropdownParent.addEventListener("focus", (e) => {
-    courseDropdownList.style.display = "initial";
-})
-courseDropdownNavItems[courseDropdownNavItems.length - 1].addEventListener("blur", (e) => {
-    courseDropdownList.style.display = "none";
-})
-courseDropdownList.addEventListener("mouseleave", (e) => {
-    // Dropdown disappears after mouse had left the box
-    e.target.style.display = "none";
-})
+if (courseDropdownParent) {
+    courseDropdownParent.addEventListener("mouseover", (e) => {
+        courseDropdownList.style.display = "initial";
+    })
+    courseDropdownParent.addEventListener("focus", (e) => {
+        courseDropdownList.style.display = "initial";
+    })
+    if (courseDropdownNavItems && courseDropdownList) {
+        courseDropdownNavItems[courseDropdownNavItems.length - 1].addEventListener("blur", (e) => {
+            courseDropdownList.style.display = "none";
+        })
+        courseDropdownList.addEventListener("mouseleave", (e) => {
+            // Dropdown disappears after mouse had left the box
+            e.target.style.display = "none";
+        })
+    }
+}
 
 
-// Main form
-const form = document.getElementById("main-form");
 // Error message box
-// const errorDiv = document.getElementById("error-box");
-// const errorMsg = document.getElementById("error-msg");
+const errorDiv = document.getElementById("error-box");
+const errorMsg = document.getElementById("error-msg");
 // Get input fields
 const telephoneNumberInput = document.getElementById("telephoneNo");
 
@@ -33,7 +35,7 @@ const displayError = (msg) => {
 
 // Fields validation
 const validateTelephoneNumber = (number) => {
-    if(number.length !== 11){
+    if (number.length !== 11) {
         displayError("Telephone number has to have 11 digits.")
         return false;
     }
@@ -45,49 +47,91 @@ const onlyCharacters = (value) => {
     return re.test(value);
 }
 
-const isDateValid = (date, check) => {
-    // Check defines if date should be set to before today date (-1) equals to today (0) or later (1)
-    console.log(date);
+const onlyNumbers = (value) => {
+    console.log("fun");
+    const re = /^[0-9]+$/;
+    return re.test(value);
+}
+
+// Login form validation
+const loginForm = document.getElementById("login-form");
+if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+        const id = e.target.studentId.value
+        const password = e.target.password.value;
+        if (!onlyNumbers(id)) {
+            displayError("ID number can only contain digits and cannot be empty");
+            e.preventDefault();
+            return;
+        }
+        if (password.length <= 0) {
+            displayError("Password cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+    })
 }
 
 
-// form.addEventListener("submit", (e) => {
-//     const telephoneNumber = e.target.telephoneNo.value;
-//     const city = e.target.city.value;
-//     const county = e.target.county.value;
-//     const country = e.target.country.value;
-//     const currentDate = new Date();
-//     if(!validateTelephoneNumber(telephoneNumber)){
-//         e.preventDefault();
-//         return;
-//     } else if(!onlyCharacters(city)){
-//         e.preventDefault();
-//         displayError("City can contain only letters.")
-//         return;
-//     }  else if(!onlyCharacters(county)){
-//         e.preventDefault();
-//         displayError("County can contain only letters.")
-//         return;
-//     } else if (!onlyCharacters(country)){
-//         e.preventDefault();
-//         displayError( "Country can contain only letters.")
-//         return;
-//     }
-//     if(e.target.lastDate !== undefined && e.target.resumeDate !== undefined){
-//         const lastDate = new Date(e.target.lastDate.value);
-//         const resumeDate = new Date(e.target.resumeDate.value);
-//         if(lastDate.getTime() >= resumeDate.getTime()){
-//             e.preventDefault();
-//             displayError("Last date has to be before resume date.")
-//             return;
-//         }
-//     }
-//     if(e.target.examDate !== undefined){
-//         const examDate = new Date(e.target.examDate.value)
-//         if(exameDate.getTime() <= currentDate.getTime()){
-//             e.preventDefault();
-//             displayError("Exam date has to be in the future.")
-//             return;
-//         }
-//     }
-// })
+// Sign Up form Validation
+const signUpForm = document.getElementById("signup-form");
+
+if (signUpForm) {
+    signUpForm.addEventListener("submit", (e) => {
+        const name = e.target.name.value;
+        const surname = e.target.surname.value;
+        const email = e.target.email.value;
+        const phoneNumber = e.target.phoneNumber.value;
+        const address = e.target.address.value;
+        const dateOfBirth = e.target.dateOfBirth.value;
+        const password = e.target.password.value;
+        const confirmPassword = e.target.retypePassword.value;
+        if (name.length <= 0) {
+            displayError("Name cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (surname.length <= 0) {
+            displayError("Surname cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (email.length <= 0) {
+            displayError("Email cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (phoneNumber.length <= 0 || phoneNumber.length !== 11) {
+            displayError("Phone number has to contain 11 digits and cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (address.length <= 0) {
+            displayError("Address cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (dateOfBirth.length <= 0) {
+            displayError("Date of birth is required! ");
+            e.preventDefault();
+            return;
+        }
+        const ageDifMs = Date.now() - new Date(dateOfBirth);
+        const ageDate = new Date(ageDifMs);
+        if(Math.abs(ageDate.getUTCFullYear() - 1970)< 18){
+            displayError("You have to be at least 18 years old!");
+            e.preventDefault();
+            return;
+        }
+        if (password.length <= 0) {
+            displayError("Password cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+        if (confirmPassword.length <= 0 || confirmPassword.length != password.length || confirmPassword != password) {
+            displayError("Passwords has to match and cannot be empty!");
+            e.preventDefault();
+            return;
+        }
+    })
+}

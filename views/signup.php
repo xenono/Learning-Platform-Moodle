@@ -10,7 +10,8 @@ require_once "../config/Connection.php";
 //INSERT INTO student (student_id,fees,personal_tutor_id) VALUES (@userId,1000,0);
 //COMMIT;
 global $conn;
-
+$isError = false;
+$formSuccess = false;
 if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["name"]) && isset($_POST["phoneNumber"]) && isset($_POST["email"]) &&isset($_POST["address"])) {
     $name = mysqli_escape_string($conn,$_POST["name"]);
     $surname = mysqli_escape_string($conn,$_POST["surname"]);
@@ -22,9 +23,10 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
     $sql = "INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth)
     VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth');";
     if($conn->query($sql)){
-        $formError = false;
+        $isError = false;
+        $formSuccess = true;
     } else {
-        $formError = true;
+        $isError = true;
         echo mysqli_error($conn);
     }
 }
@@ -32,8 +34,8 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
 
 <div class="wrapper-center">
     <a href="login.php" class="button" style="position: absolute; left: 10%; top: 12%;">Login</a>
-    <form action="signup.php" method="POST" class="flex-form">
-        <h2>Signup form</h2>
+    <form action="signup.php" method="POST" class="flex-form" id="signup-form" >
+        <h2 style="margin: 20px 0;">Signup form</h2>
         <label for="name">Name</label>
         <input type="text" name="name" id="name"/>
         <label for="surname">Surname</label>
@@ -51,14 +53,21 @@ if (isset($_POST["dateOfBirth"]) && isset($_POST["surname"]) && isset($_POST["na
         <label for="retypePassword">Confirm Password</label>
         <input type="password" name="retypePassword" id="retypePassword"/>
         <?php
-        if(isset($formError)) {
-            if ($formError) {
-                displayError("There was an error while creating your account!");
-            } else {
+        if(isset($formSuccess)) {
+            if ($formSuccess) {
                 displaySuccessMessage("Your account was created successfully!");
             }
         }
         ?>
+        <div class="error <?php if(!$isError) echo 'hidden' ?>" id="error-box">
+            <span id="error-msg">
+                        <?php
+                        if ($isError) {
+                            ?>
+                            <p>There was an error while creating your account!</p>
+                        <?php } ?>
+            </span>
+        </div>
         <button type="submit">Create account</button>
     </form>
 </div>
