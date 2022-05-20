@@ -6,6 +6,8 @@ global $conn;
 $sqlCourses = "SELECT * FROM course";
 $res = $conn->query($sqlCourses);
 $courses = null;
+$isError = false;
+$errorMsg = "";
 if ($res->num_rows > 0) {
     $courses = mysqli_fetch_all($res, MYSQLI_ASSOC);
     $json = json_encode($courses);
@@ -20,13 +22,15 @@ if (isset($_POST["course"]) && $_POST["course"] !== null) {
     $res = $conn->query($check);
     $sql = mysqli_fetch_array($res, MYSQLI_NUM);
     if ($sql > 1) {
-        echo "You have already submitted the application for this course!";
+        $isError = true;
+        $errorMsg = "You have already submitted the application for this course!";
     } else {
         $sql = "INSERT INTO studentcourse (studentId,courseId) VALUES ('$studentId','$courseId')";
         $res = $conn->query($sql);
         if ($res) {
         } else {
-            echo "There was an error while enrolling on to a course";
+            $isError = true;
+            $errorMsg = "There was an error while enrolling on to a course";
             echo mysqli_error($conn);
         }
     }
@@ -55,6 +59,15 @@ if (isset($_POST["course"]) && $_POST["course"] !== null) {
         <h2 id="course-leader"></h2>
         <h2>Course Fee in GBP</h2>
         <h2 id = "course-fee"></h2>
+    </div>
+    <div class="error <?php if(!$isError) echo 'hidden' ?>" id="error-box">
+            <span id="error-msg">
+                        <?php
+                        if ($isError) {
+                            ?>
+                            <p><?= $errorMsg?></p>
+                        <?php } ?>
+            </span>
     </div>
     <button type="submit">Enroll</button>
 </form>

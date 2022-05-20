@@ -869,11 +869,11 @@ th {
 }
 
 .admin .page-content{
-    min-width: 800px;
+    /*min-width: 800px;*/
     width: 100%;
     margin: 20px 0 0 0 ;
     padding: 10px 0px 50px;
-    border-bottom: 2px solid black;
+    /*border-bottom: 2px solid black;*/
 }
 
 .admin .add-form {

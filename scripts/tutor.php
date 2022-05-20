@@ -12,6 +12,9 @@ function addNewTutor($conn, $postData){
         $sql = "INSERT INTO user (name,surname,phoneNumber,email,password,address,dateOfBirth,userType)
         VALUES ('$name','$surname','$phoneNumber','$email','$password','$address','$dateOfBirth','tutor');";
         if ($conn->query($sql)) {
+            $tutorId = $conn->insert_id;
+            $sql = "INSERT INTO tutor (tutorId) VALUES ($tutorId)";
+            $conn->query($sql);
             return false;
         } else {
             return true;

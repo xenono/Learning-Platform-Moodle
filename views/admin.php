@@ -120,46 +120,45 @@ $formError = false;
     </div>
 
     <?php
-    if (isset($_POST["createTutor"])) {
-        $formError = addNewTutor($conn, $_POST);
-    }
-    ?>
-    <div class="page-content">
-
-        <h2><i class="fa fa-university"> Manage Tutors </i></h2>
-        <form action="admin.php" method="POST" class="flex-form add-form">
-            <h2>Add new tutor</h2>
-
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name"/>
-            <label for="surname">Surname</label>
-            <input type="text" name="surname" id="surname"/>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email"/>
-            <label for="phoneNumber">Phone Number</label>
-            <input type="number" name="phoneNumber" id="phoneNumber"/>
-            <label for="address">Your address</label>
-            <input type="text" name="address" id="address"/>
-            <label for="dateOfBirth">Date of birth</label>
-            <input type="date" name="dateOfBirth" id="dateOfBirth"/>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password"/>
-            <label for="retypePassword">Confirm Password</label>
-            <input type="password" name="retypePassword" id="retypePassword"/>
-            <?php
-            if (isset($formError) && isset($_POST["createTutor"])) {
-                if ($formError) {
-                    displayError("There was an error while creating new tutor!");
-                } else {
-                    displaySuccessMessage("Your tutor was created successfully!");
+    if ($_SESSION["userType"] === "admin") {
+        if (isset($_POST["createTutor"])) {
+            $formError = addNewTutor($conn, $_POST);
+        }
+        ?>
+        <div class="page-content">
+            <h2><i class="fa fa-university"> Manage Tutors </i></h2>
+            <form action="admin.php" method="POST" class="flex-form add-form">
+                <h2>Add new tutor</h2>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name"/>
+                <label for="surname">Surname</label>
+                <input type="text" name="surname" id="surname"/>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email"/>
+                <label for="phoneNumber">Phone Number</label>
+                <input type="number" name="phoneNumber" id="phoneNumber"/>
+                <label for="address">Your address</label>
+                <input type="text" name="address" id="address"/>
+                <label for="dateOfBirth">Date of birth</label>
+                <input type="date" name="dateOfBirth" id="dateOfBirth"/>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password"/>
+                <label for="retypePassword">Confirm Password</label>
+                <input type="password" name="retypePassword" id="retypePassword"/>
+                <?php
+                if (isset($formError) && isset($_POST["createTutor"])) {
+                    if ($formError) {
+                        displayError("There was an error while creating new tutor!");
+                    } else {
+                        displaySuccessMessage("Your tutor was created successfully!");
+                    }
                 }
-            }
-            ?>
-            <button type="submit" name="createTutor">Create tutor</button>
-        </form>
+                ?>
+                <button type="submit" name="createTutor">Create tutor</button>
+            </form>
 
-    </div>
-
+        </div>
+    <?php } ?>
     <div class="page-content">
 
         <?php
@@ -196,10 +195,10 @@ $formError = false;
                             <td><?php echo $row->dateOfBirth ?></td>
                             <td><input type='submit' class="button" name='authoriseTutor' value='Authorise'</td>
                             <td><input type='submit' class="button" name='rejectTutor' value='Reject'</td>
-                        </tr></table>
-                    <input type='hidden' name='userAuthorised' value='
+                        </tr>
+                        <input type='hidden' name='userAuthorised' value='
     <?php echo $row->userAuthorised ?>'/>
-                    <input type='hidden' name='id' value='<?php echo $row->id ?>'/>
+                        <input type='hidden' name='id' value='<?php echo $row->id ?>'/>
                     </form>
 
                     <?php
@@ -267,9 +266,8 @@ $formError = false;
 
                 </form>
 
-                <?php
-
-            ?> </table>
+            <?php }
+            } ?> </table>
     </div>
     <div class="page-content">
         <table>
@@ -435,34 +433,31 @@ $formError = false;
             $assignmentDetails = mysqli_escape_string($conn, $_POST["assignmentDetails"]);
             $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
             $fileData = $_FILES["file"];
-
-         <?php
-         }
-         ?>
-     </div>
+        }
+        ?>
+    </div>
     <!-- Assignment file handling. Admin can access all files. But tutors are restricted to access files of their own course-->
     <h1>Assignments</h1>
-    <h2><i class = "fa fa-upload"> Upload Assignment Files</i></h2>
-    <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
+    <h2><i class="fa fa-upload"> Upload Assignment Files</i></h2>
+    <form action="admin.php" method="POST" class="flex-form" enctype="multipart/form-data">
         <label for="courseId">Choose course</label>
         <select name="courseId" id="courseId" required>
             <?php
             foreach ($courses as $course) {
-                if($_SESSION['userType'] == 'tutor'){
-                    foreach ($resultingTutor as $ans){
-                        if ($course[0] == $ans[1]){
+                if ($_SESSION['userType'] == 'tutor') {
+                    foreach ($resultingTutor as $ans) {
+                        if ($course[0] == $ans[1]) {
                             ?>
-                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php }
+                            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                        <?php }
                     }
+                } else {
+                    ?>
+                    <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                    <?php
                 }
-             else {
+            }
             ?>
-             <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-             <?php
-}
-         }
- ?>
         </select>
         <label for="assignmentDetails">Assignment Details</label>
         <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
@@ -473,177 +468,172 @@ $formError = false;
         <button type="submit" value="true" name="addAssignmentResource">Add</button>
     </form>
 
+    <?php
+    $tmpName = $fileData["tmp_name"];
+    $filename = $fileData["name"];
 
-            $tmpName = $fileData["tmp_name"];
-            $filename = $fileData["name"];
+    $noOfForbiddenChars = 0;
 
-            $noOfForbiddenChars = 0;
+    // Count no. of forbidden chars in file name
+    ?>
+    </select>
+    <label for="assignmentDetails">Assignment Details</label>
+    <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
+    <label for="assignmentDate">Assignment Due Date</label>
+    <input type="date" id="assignmentDate" name="assignmentDate" required> </input>
+    <label for="file">Assignment Resource</label>
+    <input type="file" name="file" id="file">
+    <button type="submit" value="true" name="addAssignmentResource">Add</button>
+    </form>
 
-            // Count no. of forbidden chars in file name
+    <?php
+    if (isset($_POST["addAssignmentResource"]) && $_FILES["file"]) {
+    $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
+    $assignmentDetails = mysqli_escape_string($conn, $_POST["assignmentDetails"]);
+    $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
+    $fileData = $_FILES["file"];
 
+    $tmpName = $fileData["tmp_name"];
+    $filename = $fileData["name"];
 
-                    }
-                }
-                ?>
-            </select>
-            <label for="assignmentDetails">Assignment Details</label>
-            <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
-            <label for="assignmentDate">Assignment Due Date</label>
-            <input type="date" id="assignmentDate" name="assignmentDate" required> </input>
-            <label for="file">Assignment Resource</label>
-            <input type="file" name="file" id="file">
-            <button type="submit" value="true" name="addAssignmentResource">Add</button>
-        </form>
+    $noOfForbiddenChars = 0;
 
-        <?php
-        if (isset($_POST["addAssignmentResource"]) && $_FILES["file"]) {
-            $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
-            $assignmentDetails = mysqli_escape_string($conn, $_POST["assignmentDetails"]);
-            $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
-            $fileData = $_FILES["file"];
-
-            $tmpName = $fileData["tmp_name"];
-            $filename = $fileData["name"];
-
-            $noOfForbiddenChars = 0;
-
-            // Count no. of forbidden chars in file name
+    // Count no. of forbidden chars in file name
 
 
-            for ($i = 0; $i < strlen($filename); $i++) {
-                if (($filename[$i] == "<") || ($filename[$i] == ">") || ($filename[$i] == "#") || ($filename[$i] == "%")) {
-                    $noOfForbiddenChars++;
-                }
-            }
+    for ($i = 0; $i < strlen($filename); $i++) {
+        if (($filename[$i] == "<") || ($filename[$i] == ">") || ($filename[$i] == "#") || ($filename[$i] == "%")) {
+            $noOfForbiddenChars++;
+        }
+    }
 
 
-
-            if ((move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)) {
-                $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
-                if (!$conn->query($sql)) {
-                    echo mysqli_error($conn);
-                }
-                $assignmentId = $conn->insert_id;
-                $authorId = $_SESSION["userId"];
-                $sql = "INSERT INTO file(fileName,authorId) VALUES ('$filename','$authorId');";
-                if (!$conn->query($sql)) {
-                    echo mysqli_error($conn);
-                }
-                $fileId = $conn->insert_id;
-                $sql = "INSERT INTO assignmentresource (assignmentId,fileId) VALUES ('$assignmentId','$fileId')";
-                if (!$conn->query($sql)) {
-                    echo mysqli_error($conn);
-                }
-            } else {
-                echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
-
-        if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)){
-            $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
-            if(!$conn->query($sql)){
-                echo mysqli_error($conn);
-
-
-            }
-        } ?>
-
-        <!-- Grade student assignment work -->
-    </div>
-        <div class="page-content">>
-            <h2><i class="fa fa-university"> Grade Assignments</i></h2>
-
-            <table>
-                <tr>
-                    <th>Assignment</th>
-                    <th>Submitted Work</th>
-                    <th>Student</th>
-                    <th>Grade</th>
-                </tr>
-                <?php
-                $sql = mysqli_query($conn, "SELECT * FROM assignmentgrade;");
-                $fileNames = mysqli_query($conn, "SELECT fileName FROM file INNER JOIN assignmentgrade ON assignmentgrade.fileId=file.fileId WHERE file.fileId=assignmentgrade.fileId");
-                while ($row = mysqli_fetch_array($sql)) { ?>
-                    <form method='POST' action='<?php echo "admin.php?fileid=" . $row['fileId']; ?>' method='POST'
-                          enctype='multipart/form-data'>
-                        <tr>
-                            <td> <?php echo $row['assignmentId']; ?> </td>
-                            <td><?php echo "<a href='/learning-platform-moodle/uploads/" . mysqli_fetch_array($fileNames)[0] . "'/>Download file</a>"; ?></td>
-                            <td> <?php echo $row['userId']; ?> </td>
-                            <td><input type='text' name='Grade' id='Grade' required></td>
-                            <td><input type="submit" value="Submit" name="uploadGrade"></td>
-                        </tr>
-                    </form>
-                <?php }
-
-                if (isset($_POST["uploadGrade"])) {
-                    $fileId = $_GET['fileid'];
-                    $userId = $_SESSION['userId'];
-                    $grade = mysqli_escape_string($conn, $_POST["Grade"]);
-
-                    $sql = "UPDATE assignmentgrade SET grade = '$grade' WHERE fileId='$fileId'";
-                    if (!$conn->query($sql)) {
-                        echo mysqli_error($conn);
-                    }
-                } ?>
-            </table>
-        </div>
-    <div class="page-content">
-        <h1>Quizzes</h1>
-        <h2><i class="fa fa-file"> Add Quiz</i></h2>
-
-        <form action="admin.php" method="POST" class="flex-form add-form" enctype="multipart/form-data">
-            <label for="courseId">Course</label>
-            <select name="courseId" id="courseId" required>
-                <?php
-                foreach ($courses as $course) {
-                    if ($_SESSION['userType'] == 'tutor') {
-                        foreach ($resultingTutor as $ans) {
-                            if ($course[0] == $ans[1]) {
-                                ?>
-                                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-                            <?php }
-                        }
-                    } else {
-                        ?>
-                        <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-                        <?php
-
-                    }
-                }
-                ?>
-            </select>
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" required></input>
-            <button type="submit" value="true" name="addQuiz">Add</button>
-        </form>
-
-    <?php } 
-
-    if (isset($_POST["uploadGrade"])) {
-        $fileId = $_GET['fileid'];
-        $userId = $_SESSION['userId'];
-        $grade = mysqli_escape_string($conn,$_POST["Grade"]);
-
-        $sql = "UPDATE assignmentgrade SET grade = '$grade' WHERE fileId='$fileId'";
-        if(!$conn->query($sql)) {
+    if ((move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)) {
+        $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
+        if (!$conn->query($sql)) {
             echo mysqli_error($conn);
         }
+        $assignmentId = $conn->insert_id;
+        $authorId = $_SESSION["userId"];
+        $sql = "INSERT INTO file(fileName,authorId) VALUES ('$filename','$authorId');";
+        if (!$conn->query($sql)) {
+            echo mysqli_error($conn);
+        }
+        $fileId = $conn->insert_id;
+        $sql = "INSERT INTO assignmentresource (assignmentId,fileId) VALUES ('$assignmentId','$fileId')";
+        if (!$conn->query($sql)) {
+            echo mysqli_error($conn);
+        }
+    } else {
+        echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
+    }
+    if ((move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)) {
+        $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
+        if (!$conn->query($sql)) {
+            echo mysqli_error($conn);
+
+
+        }
     } ?>
-</table>
 
+    <!-- Grade student assignment work -->
+</div>
+    <div class="page-content">>
+        <h2><i class="fa fa-university"> Grade Assignments</i></h2>
+
+        <table>
+            <tr>
+                <th>Assignment</th>
+                <th>Submitted Work</th>
+                <th>Student</th>
+                <th>Grade</th>
+            </tr>
+            <?php
+            $sql = mysqli_query($conn, "SELECT * FROM assignmentgrade;");
+            $fileNames = mysqli_query($conn, "SELECT fileName FROM file INNER JOIN assignmentgrade ON assignmentgrade.fileId=file.fileId WHERE file.fileId=assignmentgrade.fileId");
+            while ($row = mysqli_fetch_array($sql)) { ?>
+                <form method='POST' action='<?php echo "admin.php?fileid=" . $row['fileId']; ?>' method='POST'
+                      enctype='multipart/form-data'>
+                    <tr>
+                        <td> <?php echo $row['assignmentId']; ?> </td>
+                        <td><?php echo "<a href='/learning-platform-moodle/uploads/" . mysqli_fetch_array($fileNames)[0] . "'/>Download file</a>"; ?></td>
+                        <td> <?php echo $row['userId']; ?> </td>
+                        <td><input type='text' name='Grade' id='Grade' required></td>
+                        <td><input type="submit" value="Submit" name="uploadGrade"></td>
+                    </tr>
+                </form>
+            <?php }
+
+            if (isset($_POST["uploadGrade"])) {
+                $fileId = $_GET['fileid'];
+                $userId = $_SESSION['userId'];
+                $grade = mysqli_escape_string($conn, $_POST["Grade"]);
+
+                $sql = "UPDATE assignmentgrade SET grade = '$grade' WHERE fileId='$fileId'";
+                if (!$conn->query($sql)) {
+                    echo mysqli_error($conn);
+                }
+            } ?>
+        </table>
+    </div>
+<div class="page-content">
     <h1>Quizzes</h1>
-    <h2><i class = "fa fa-file"> Add Quiz</i></h2>
+    <h2><i class="fa fa-file"> Add Quiz</i></h2>
 
-    <form action="admin.php" method="POST" class="flex-form"  enctype="multipart/form-data">
+    <form action="admin.php" method="POST" class="flex-form add-form" enctype="multipart/form-data">
         <label for="courseId">Course</label>
         <select name="courseId" id="courseId" required>
             <?php
             foreach ($courses as $course) {
-                if ($_SESSION['userType'] == 'tutor'){
-                    foreach ($resultingTutor as $ans){
-                        if ($course[0] == $ans[1]){
+                if ($_SESSION['userType'] == 'tutor') {
+                    foreach ($resultingTutor as $ans) {
+                        if ($course[0] == $ans[1]) {
                             ?>
-                <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php }
+                            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                        <?php }
+                    }
+                } else {
+                    ?>
+                    <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                    <?php
+
+                }
+            }
+            ?>
+        </select>
+        <label for="quizName">Quiz Name</label>
+        <input type="text" id="quizName" name="quizName" required></input>
+        <button type="submit" value="true" name="addQuiz">Add</button>
+    </form>
+
+    <?php }
+
+    if (isset($_POST["uploadGrade"])) {
+        $fileId = $_GET['fileid'];
+        $userId = $_SESSION['userId'];
+        $grade = mysqli_escape_string($conn, $_POST["Grade"]);
+
+        $sql = "UPDATE assignmentgrade SET grade = '$grade' WHERE fileId='$fileId'";
+        if (!$conn->query($sql)) {
+            echo mysqli_error($conn);
+        }
+    } ?>
+    </table>
+
+    <h1>Quizzes</h1>
+    <h2><i class="fa fa-file"> Add Quiz</i></h2>
+
+    <form action="admin.php" method="POST" class="flex-form" enctype="multipart/form-data">
+        <label for="courseId">Course</label>
+        <select name="courseId" id="courseId" required>
+            <?php
+            foreach ($courses as $course) {
+                if ($_SESSION['userType'] == 'tutor') {
+                    foreach ($resultingTutor as $ans) {
+                        if ($course[0] == $ans[1]) {
+                            ?>
+                            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
+                        <?php }
 
                     }
                 }
@@ -656,71 +646,69 @@ $formError = false;
         <button type="submit" value="true" name="addQuiz">Add</button>
     </form>
 
-                ?>
-            </select>
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" required></input>
-            <button type="submit" value="true" name="addQuiz">Add</button>
-        </form>
+    ?>
+    </select>
+    <label for="quizName">Quiz Name</label>
+    <input type="text" id="quizName" name="quizName" required></input>
+    <button type="submit" value="true" name="addQuiz">Add</button>
+    </form>
 
 
+    <?php
 
-        <?php
+    if (isset($_POST["addQuiz"])) {
 
-        if (isset($_POST["addQuiz"])) {
+        $noOfForbiddenChars = 0;
+        $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
+        $quizName = mysqli_escape_string($conn, $_POST["quizName"]);
 
-            $noOfForbiddenChars = 0;
-            $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
-            $quizName = mysqli_escape_string($conn, $_POST["quizName"]);
-
-            for ($i = 0; $i < strlen($quizName); $i++) {
-                if (($quizName[$i] == "<") || ($quizName[$i] == ">") || ($quizName[$i] == "#") || ($quizName[$i] == "%")) {
-                    $noOfForbiddenChars++;
-                }
-            }
-
-            if ($noOfForbiddenChars == 0) {
-                $sql = "INSERT INTO quiz(courseId, quizName) VALUES ('$courseId', '$quizName');";
-                if (!$conn->query($sql)) {
-                    echo mysqli_error($conn);
-                }
-            } else {
-                echo "Quiz name invalid. Ensure there are no '<', '>', '#' or '%' symbols";
+        for ($i = 0; $i < strlen($quizName); $i++) {
+            if (($quizName[$i] == "<") || ($quizName[$i] == ">") || ($quizName[$i] == "#") || ($quizName[$i] == "%")) {
+                $noOfForbiddenChars++;
             }
         }
 
+        if ($noOfForbiddenChars == 0) {
+            $sql = "INSERT INTO quiz(courseId, quizName) VALUES ('$courseId', '$quizName');";
+            if (!$conn->query($sql)) {
+                echo mysqli_error($conn);
+            }
+        } else {
+            echo "Quiz name invalid. Ensure there are no '<', '>', '#' or '%' symbols";
+        }
+    }
 
-        ?>
 
-        <h2 style="margin-top: 30px;"><i class="fa fa-upload"> Upload Quiz Questions</i></h2>
+    ?>
 
-        <form action="admin.php" method="POST" class="flex-form add-form" enctype="multipart/form-data">
-            <label for="quizId">Quiz</label>
-            <select name="quizId" id="quizId" required>
-                <?php
-                foreach ($quizzes as $quiz) { ?>
-                    <option value="<?php echo $quiz[0] ?>"><?php echo $quiz[2] ?></option>
-                <?php } ?>
-            </select>
-            <label for="question">Question</label>
-            <textarea id="question" name="question" required></textarea>
-            <label for="answer1">Answer 1</label>
-            <textarea id="answer1" name="answer1" required></textarea>
-            <label for="answer2">Answer 2</label>
-            <textarea id="answer2" name="answer2" required></textarea>
-            <label for="answer3">Answer 3</label>
-            <textarea id="answer3" name="answer3"></textarea>
-            <label for="answer4">Answer 4</label>
-            <textarea id="answer4" name="answer4"></textarea>
-            <label for="correctAnswer">Correct Answer</label>
-            <select name="correctAnswer" id="correctAnswer" required>
-                <option value="answer1">Answer 1</option>
-                <option value="answer2">Answer 2</option>
-                <option value="answer3">Answer 3</option>
-                <option value="answer4">Answer 4</option>
-            </select>
-            <button type="submit" value="true" name="addQuestion" style="margin-top: 10px">Add</button>
+    <h2 style="margin-top: 30px;"><i class="fa fa-upload"> Upload Quiz Questions</i></h2>
 
+    <form action="admin.php" method="POST" class="flex-form add-form" enctype="multipart/form-data">
+        <label for="quizId">Quiz</label>
+        <select name="quizId" id="quizId" required>
+            <?php
+            foreach ($quizzes as $quiz) { ?>
+                <option value="<?php echo $quiz[0] ?>"><?php echo $quiz[2] ?></option>
+            <?php } ?>
+        </select>
+        <label for="question">Question</label>
+        <textarea id="question" name="question" required></textarea>
+        <label for="answer1">Answer 1</label>
+        <textarea id="answer1" name="answer1" required></textarea>
+        <label for="answer2">Answer 2</label>
+        <textarea id="answer2" name="answer2" required></textarea>
+        <label for="answer3">Answer 3</label>
+        <textarea id="answer3" name="answer3"></textarea>
+        <label for="answer4">Answer 4</label>
+        <textarea id="answer4" name="answer4"></textarea>
+        <label for="correctAnswer">Correct Answer</label>
+        <select name="correctAnswer" id="correctAnswer" required>
+            <option value="answer1">Answer 1</option>
+            <option value="answer2">Answer 2</option>
+            <option value="answer3">Answer 3</option>
+            <option value="answer4">Answer 4</option>
+        </select>
+        <button type="submit" value="true" name="addQuestion" style="margin-top: 10px">Add</button>
 
 
         ?>
@@ -827,7 +815,7 @@ $formError = false;
         ?>
 
 
-    </div>
+</div>
 </div>
 </div>
 <?php
