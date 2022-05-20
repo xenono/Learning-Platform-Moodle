@@ -71,6 +71,8 @@ if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION["isLoggedIn"]) && 
             <a class="nav-item <?php if ($currentPage == "grades.php") {
                 echo "nav-item-active";
             } ?>" href="../views/grades.php">grades</a>
+            <a class="nav-item <?php if($currentPage == "profile.php") {echo "nav-item-active";}?>" href="http://localhost/Learning-Platform-Moodle/views/profile/index.php">Profile
+            </a>
             <form action="logout.php" method="POST">
                 <button type="submit">Logout</button>
             </form>
