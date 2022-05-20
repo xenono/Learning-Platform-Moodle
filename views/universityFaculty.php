@@ -20,11 +20,27 @@ if ($courses->num_rows > 0) {
         <img src = "../public/assets/logo.png">
         <h1>Faculty</h1>
         <div class = "desc">
-        <p>The ACE Training System is a premier online school that has attracted international notice for the high quality of education it provides. It is completely equipped with professionally educated tutors and a well-organized administrative staff. We'd like to introduce you to our tutors.</p>
+        <p>The ACE Training Online Learning Platform is a premier online school that has attracted international notice for the high quality of education it provides. It is completely equipped with professionally educated tutors and a well-organized administrative staff. We have over 50,000 students with a balancing number of tutors, to teach, guide and support them. Each tutor has proved their excellency in their expert fields. We assure you that our tutors will promote and support you in all walks of your studies. We adhere for the well-being and prosperity of ACE Training along with our successful career life. Together we are doing a great job.. .</p>
         </div>
-
+        <h2>ACE Training Authority Member</h2>
+        <div class = "tutors">
+            <?php
+            $sql = "SELECT id ,name ,surname ,email  FROM user WHERE userType = 'admin'";
+            $result = mysqli_query($conn,$sql);
+            if($result){
+            while($row = $result->fetch_object()){?>
+            <div>
+                <p><?php echo "Name: ".$row->name." ".$row->surname ?></p>
+                <p>Contact details: <?= $row->email ?></p>
+                <p>Availability: Monday to Friday, 9:00am - 9:00pm</p>
+            <?php
+            }
+            }
+            ?>
+        </div>
+        </div>
+        <h2>Teaching Staffs</h2>
         <div class="tutors">
-
         <?php
         $sql = "SELECT user.id AS Id , user.name AS name, user.surname AS surname, user.email AS email, user.phoneNumber AS number FROM tutor LEFT JOIN user ON 
     tutor.tutorId = user.id ";

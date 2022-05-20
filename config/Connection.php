@@ -1,6 +1,4 @@
 <?php
-
-
 $user = "moodle";
 $host = "localhost";
 $password = "password";
