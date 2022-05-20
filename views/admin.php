@@ -268,8 +268,7 @@ $formError = false;
                 </form>
 
                 <?php
-            }
-            }
+
             ?> </table>
     </div>
     <div class="page-content">
@@ -415,6 +414,7 @@ $formError = false;
                         ?>
                         <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
                         <?php
+
                     }
                 }
                 ?>
@@ -427,7 +427,7 @@ $formError = false;
             <input type="file" name="file" id="file">
             <button type="submit" value="true" name="addAssignmentResource">Add</button>
         </form>
-<<<<<<< HEAD
+
 
         <?php
         if (isset($_POST["addAssignmentResource"]) && $_FILES["file"]) {
@@ -435,7 +435,7 @@ $formError = false;
             $assignmentDetails = mysqli_escape_string($conn, $_POST["assignmentDetails"]);
             $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
             $fileData = $_FILES["file"];
-=======
+
          <?php
          }
          ?>
@@ -472,7 +472,7 @@ $formError = false;
         <input type="file" name="file" id="file">
         <button type="submit" value="true" name="addAssignmentResource">Add</button>
     </form>
->>>>>>> 2c76fe0f1d6ac02e124e6c3f70b2e57f1547ed2e
+
 
             $tmpName = $fileData["tmp_name"];
             $filename = $fileData["name"];
@@ -481,13 +481,43 @@ $formError = false;
 
             // Count no. of forbidden chars in file name
 
+
+                    }
+                }
+                ?>
+            </select>
+            <label for="assignmentDetails">Assignment Details</label>
+            <textarea id="assignmentDetails" name="assignmentDetails" required></textarea>
+            <label for="assignmentDate">Assignment Due Date</label>
+            <input type="date" id="assignmentDate" name="assignmentDate" required> </input>
+            <label for="file">Assignment Resource</label>
+            <input type="file" name="file" id="file">
+            <button type="submit" value="true" name="addAssignmentResource">Add</button>
+        </form>
+
+        <?php
+        if (isset($_POST["addAssignmentResource"]) && $_FILES["file"]) {
+            $courseId = mysqli_escape_string($conn, $_POST["courseId"]);
+            $assignmentDetails = mysqli_escape_string($conn, $_POST["assignmentDetails"]);
+            $assignmentDate = date('Y-m-d', strtotime($_POST['assignmentDate']));
+            $fileData = $_FILES["file"];
+
+            $tmpName = $fileData["tmp_name"];
+            $filename = $fileData["name"];
+
+            $noOfForbiddenChars = 0;
+
+            // Count no. of forbidden chars in file name
+
+
             for ($i = 0; $i < strlen($filename); $i++) {
                 if (($filename[$i] == "<") || ($filename[$i] == ">") || ($filename[$i] == "#") || ($filename[$i] == "%")) {
                     $noOfForbiddenChars++;
                 }
             }
 
-<<<<<<< HEAD
+
+
             if ((move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)) {
                 $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
                 if (!$conn->query($sql)) {
@@ -506,12 +536,13 @@ $formError = false;
                 }
             } else {
                 echo "File uploading has failed. Check if the name of the file contains a '<', '>', '%' or a '#'.";
-=======
+
         if((move_uploaded_file($tmpName,$_SERVER["DOCUMENT_ROOT"] . "/uploads/$filename")) && ($noOfForbiddenChars == 0)){
             $sql = "INSERT INTO assignment(courseId,assignmentDetails,dueDate) VALUES ('$courseId','$assignmentDetails', '$assignmentDate');";
             if(!$conn->query($sql)){
                 echo mysqli_error($conn);
->>>>>>> 2c76fe0f1d6ac02e124e6c3f70b2e57f1547ed2e
+
+
             }
         } ?>
 
@@ -575,6 +606,7 @@ $formError = false;
                         ?>
                         <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
                         <?php
+
                     }
                 }
                 ?>
@@ -583,8 +615,7 @@ $formError = false;
             <input type="text" id="quizName" name="quizName" required></input>
             <button type="submit" value="true" name="addQuiz">Add</button>
         </form>
-<<<<<<< HEAD
-=======
+
     <?php } 
 
     if (isset($_POST["uploadGrade"])) {
@@ -613,12 +644,10 @@ $formError = false;
                             ?>
                 <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
             <?php }
+
                     }
-                }else{
-                    ?>
-            <option value="<?php echo $course[0] ?>"><?php echo $course[1] ?></option>
-            <?php
                 }
+
             }
             ?>
         </select>
@@ -626,7 +655,14 @@ $formError = false;
         <input type="text" id="quizName" name="quizName" required></input>
         <button type="submit" value="true" name="addQuiz">Add</button>
     </form>
->>>>>>> 2c76fe0f1d6ac02e124e6c3f70b2e57f1547ed2e
+
+                ?>
+            </select>
+            <label for="quizName">Quiz Name</label>
+            <input type="text" id="quizName" name="quizName" required></input>
+            <button type="submit" value="true" name="addQuiz">Add</button>
+        </form>
+
 
 
         <?php
@@ -652,6 +688,40 @@ $formError = false;
                 echo "Quiz name invalid. Ensure there are no '<', '>', '#' or '%' symbols";
             }
         }
+
+
+        ?>
+
+        <h2 style="margin-top: 30px;"><i class="fa fa-upload"> Upload Quiz Questions</i></h2>
+
+        <form action="admin.php" method="POST" class="flex-form add-form" enctype="multipart/form-data">
+            <label for="quizId">Quiz</label>
+            <select name="quizId" id="quizId" required>
+                <?php
+                foreach ($quizzes as $quiz) { ?>
+                    <option value="<?php echo $quiz[0] ?>"><?php echo $quiz[2] ?></option>
+                <?php } ?>
+            </select>
+            <label for="question">Question</label>
+            <textarea id="question" name="question" required></textarea>
+            <label for="answer1">Answer 1</label>
+            <textarea id="answer1" name="answer1" required></textarea>
+            <label for="answer2">Answer 2</label>
+            <textarea id="answer2" name="answer2" required></textarea>
+            <label for="answer3">Answer 3</label>
+            <textarea id="answer3" name="answer3"></textarea>
+            <label for="answer4">Answer 4</label>
+            <textarea id="answer4" name="answer4"></textarea>
+            <label for="correctAnswer">Correct Answer</label>
+            <select name="correctAnswer" id="correctAnswer" required>
+                <option value="answer1">Answer 1</option>
+                <option value="answer2">Answer 2</option>
+                <option value="answer3">Answer 3</option>
+                <option value="answer4">Answer 4</option>
+            </select>
+            <button type="submit" value="true" name="addQuestion" style="margin-top: 10px">Add</button>
+
+
 
         ?>
 
