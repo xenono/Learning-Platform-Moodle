@@ -12,8 +12,8 @@ function runenrollmentStudent($conn, $row){
             <td><?php echo $row->surname ?></td>
             <td><?php echo $row->courseId ?></td>
 
-            <td><input type='submit' name='authorise' value='Authorise'</td>
-            <td><input type='submit' name='reject' value='Reject'</td>
+            <td><input type='submit' class="button" name='authorise' value='Authorise'</td>
+            <td><input type='submit' class="button" name='reject' value='Reject'</td>
         </tr>
 
         <input type='hidden' name='courseApproved' value='<?php echo $row->courseApproved ?>'/>

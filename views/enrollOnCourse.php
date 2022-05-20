@@ -53,6 +53,8 @@ if (isset($_POST["course"]) && $_POST["course"] !== null) {
         <p id="course-programme"></p>
         <h2>Course Leader</h2>
         <h2 id="course-leader"></h2>
+        <h2>Course Fee in GBP</h2>
+        <h2 id = "course-fee"></h2>
     </div>
     <button type="submit">Enroll</button>
 </form>
@@ -65,10 +67,11 @@ if (isset($_POST["course"]) && $_POST["course"] !== null) {
     const courseNameHeader = document.getElementById("course-name")
     const courseProgrammePTag = document.getElementById("course-programme")
     const courseLeaderPTag = document.getElementById("course-leader")
-
+    const courseFeePTag = document.getElementById("course-fee")
     courseNameHeader.innerText = courseInfo.courseName;
     courseProgrammePTag.innerText = courseInfo.courseProgramme;
     courseLeaderPTag.innerText = courseInfo.courseLeader;
+    courseFeePTag.innerText = courseInfo.courseFee;
 
     selectedCourse.addEventListener("change", (e) => {
         courseId = e.target.value;
@@ -76,6 +79,7 @@ if (isset($_POST["course"]) && $_POST["course"] !== null) {
         courseNameHeader.innerText = courseInfo.courseName;
         courseProgrammePTag.innerText = courseInfo.courseProgramme;
         courseLeaderPTag.innerText = courseInfo.courseLeader;
+        courseFeePTag.innerText = courseInfo.courseFee;
     })
 
 
